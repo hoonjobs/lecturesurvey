@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+ android:oneshot="false">
+ <item android:drawable="@drawable/indicator_b01" android:duration="62" /> 
+ <item android:drawable="@drawable/indicator_b02" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b03" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b04" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b05" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b06" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b07" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b08" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b09" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b10" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b11" android:duration="62" />
+ <item android:drawable="@drawable/indicator_b12" android:duration="62" />
+</animation-list> 

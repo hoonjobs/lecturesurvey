@@ -1,0 +1,9 @@
+<resources>
+
+    <color name="chocolate">#322b28</color>
+    <color name="light_chocolate">#574234</color>
+    <color name="coffee">#a6937c</color>
+	
+    <string name="app_name">Lecture Survey</string>
+
+</resources>
