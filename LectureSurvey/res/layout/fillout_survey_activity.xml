@@ -28,26 +28,38 @@
         android:gravity="center_horizontal"
         android:visibility="gone" >
 
-        <kr.ac.dsc.lecturesurvey.ImageBtn
+        <Button
             android:id="@+id/fill_out_survey_btnYes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_star"
-            />
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_selector"
+            android:drawableLeft="@drawable/ic_star"
+            android:drawablePadding="3dp"
+            android:text="@string/fill_out_answer1"
+            android:textSize="16sp" />
 
-        <kr.ac.dsc.lecturesurvey.ImageBtn
+        <Button
             android:id="@+id/fill_out_survey_btnNeither"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/btn_star"
-             />
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_selector"
+            android:drawableLeft="@drawable/ic_star"
+            android:drawablePadding="3dp"
+            android:text="@string/fill_out_answer2"
+            android:textSize="16sp" />
 
-        <kr.ac.dsc.lecturesurvey.ImageBtn
+        <Button
             android:id="@+id/fill_out_survey_btnNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/btn_star"
-            />
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_selector"
+            android:drawableLeft="@drawable/ic_star"
+            android:drawablePadding="3dp"
+            android:text="@string/fill_out_answer3"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

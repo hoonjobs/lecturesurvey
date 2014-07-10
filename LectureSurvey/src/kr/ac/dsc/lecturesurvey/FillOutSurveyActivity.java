@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import kr.ac.dsc.lecturesurvey.model.*;
@@ -27,7 +28,7 @@ public class FillOutSurveyActivity extends Activity {
 	LinearLayout layoutButtons;
 	Animation animFadeIn, animBtnEffect;
 	TextView tvQuestion;
-	ImageBtn btnYes, btnNeither, btnNo;
+	Button btnYes, btnNeither, btnNo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +43,9 @@ public class FillOutSurveyActivity extends Activity {
 		layoutButtons = (LinearLayout) findViewById(R.id.fill_out_survey_layout_button);
 		tvQuestion = (TextView) findViewById(R.id.fill_out_survey_tvQuestion);
 
-		btnYes = (ImageBtn) findViewById(R.id.fill_out_survey_btnYes);
-		btnNeither = (ImageBtn) findViewById(R.id.fill_out_survey_btnNeither);
-		btnNo = (ImageBtn) findViewById(R.id.fill_out_survey_btnNo);
+		btnYes = (Button) findViewById(R.id.fill_out_survey_btnYes);
+		btnNeither = (Button) findViewById(R.id.fill_out_survey_btnNeither);
+		btnNo = (Button) findViewById(R.id.fill_out_survey_btnNo);
 
 		animBtnEffect.setAnimationListener(new AnimationListener() {
 
@@ -97,8 +98,6 @@ public class FillOutSurveyActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				tvQuestion.startAnimation(animFadeIn);
-//				v.startAnimation(animBtnEffect);
 				setQuestion();
 			}
 		});
@@ -133,7 +132,6 @@ public class FillOutSurveyActivity extends Activity {
 			//다음 질문이 없다. 여기에서 설문을 종료한다.
 			//	option : 서버에 설문 종료 알림. 
 			finish();
-			overridePendingTransition(R.anim.alpha2000, R.anim.splashfadeout);
 		}
 	}
 
@@ -157,7 +155,6 @@ public class FillOutSurveyActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		exitPopup();
-		overridePendingTransition(R.anim.alpha2000, R.anim.splashfadeout);
 	}
 
 	public void exitPopup() {
@@ -168,7 +165,6 @@ public class FillOutSurveyActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						finish();
-						overridePendingTransition(R.anim.alpha2000, R.anim.splashfadeout);
 					}
 				}).setNegativeButton("아니오", null).show();
 	}
