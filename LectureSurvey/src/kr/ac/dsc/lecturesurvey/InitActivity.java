@@ -1,5 +1,10 @@
 package kr.ac.dsc.lecturesurvey;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -69,7 +74,7 @@ public class InitActivity extends Activity {
         		AnimationDrawable frameAnimation = (AnimationDrawable) mIvAnimation.getBackground();
                 frameAnimation.start();
                 
-                //RequestInit();
+                RequestInit();
             }
         }, 1000);  // 1000ms 후 실행된다.
         
@@ -89,4 +94,9 @@ public class InitActivity extends Activity {
         }, 1000);  // 1000ms 후 실행된다.
 	}
 	
+	
+	private void RequestInit() {
+//		RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
+//		mRequestQueue.add(new JsonObjectRequest(Method.GET, url, jsonRequest, listener, errorListener))
+	}
 }

@@ -9,4 +9,12 @@
     <string name="fill_out_answer2">보통이다</string>
     <string name="fill_out_answer3">아니다</string>
 
+    <string name="choice">선택</string>
+    <string name="lecture_name">강의명</string>
+    <string name="lecture_dept">강의 학과</string>
+    <string name="lecture_date">강의일</string>
+    <string name="prof_name">교수님</string>
+
+    <string name="alert_msg_lecture_date">강의일을 선택해주세요.</string>
+    
 </resources>
