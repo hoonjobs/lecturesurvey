@@ -1,19 +1,27 @@
 package kr.ac.dsc.lecturesurvey;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Request.Method;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import kr.ac.dsc.lecturesurvey.LSApplication;
+import kr.ac.dsc.lecturesurvey.ipc.IPC;
+import kr.ac.dsc.lecturesurvey.model.User;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -21,7 +29,6 @@ import android.widget.LinearLayout;
 
 public class InitActivity extends Activity {
 
-	
 	LinearLayout m_loadingLayout;
 	ImageView mIvAnimation;
 	Context mContext;
@@ -74,29 +81,126 @@ public class InitActivity extends Activity {
         		AnimationDrawable frameAnimation = (AnimationDrawable) mIvAnimation.getBackground();
                 frameAnimation.start();
                 
-                RequestInit();
+                new GetDataTask().execute();
             }
         }, 1000);  // 1000ms 후 실행된다.
         
 
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                finish();
-        		
+//        new Handler().postDelayed(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                finish();
+//        		
+//                Intent intent = new Intent(mContext, MainActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent); //새로운 액티비티 실행~~
+//                overridePendingTransition(R.anim.alpha2000, R.anim.fadeout);
+//            }
+//        }, 1000);  // 1000ms 후 실행된다.
+	}
+	
+	private class GetDataTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			RequestInit();
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+		}
+	}	
+	
+	private void RequestInit() {
+		JsonElement responseJson = IPC.getInstance().requestInitSession(LSApplication.gRequestHeader);
+		if(ResponseInit(responseJson)) {
+			if(LSApplication.gUser.getUid() > 0) {
+				//로그인 성공
+				//go to main Activity
+				finish();
+				
+                //Intent intent = new Intent(mContext, MainTabActivity.class);
                 Intent intent = new Intent(mContext, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent); //새로운 액티비티 실행~~
                 overridePendingTransition(R.anim.alpha2000, R.anim.fadeout);
-            }
-        }, 1000);  // 1000ms 후 실행된다.
+			}
+		} else {
+			//header에서 code 가 정상이 아닐 경우.
+			ErrorPopUp();
+		}
 	}
 	
-	
-	private void RequestInit() {
-//		RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
-//		mRequestQueue.add(new JsonObjectRequest(Method.GET, url, jsonRequest, listener, errorListener))
+	private boolean ResponseInit(JsonElement response) {
+		if (response == null)
+			return false;
+
+		if (response.isJsonObject()) {
+			JsonObject jsonObject = response.getAsJsonObject();
+			JsonObject body = jsonObject.getAsJsonObject("body");
+
+			LSApplication.gUser = IPC.getInstance().getGson().fromJson(
+					body, User.class);
+			Log.i("IPC_Response",
+					"UserInfomation/ uid:" + LSApplication.gUser.getUid());
+			Log.i("IPC_Response",
+					"UserInfomation/ name:" + LSApplication.gUser.getName());
+			Log.i("IPC_Response",
+					"UserInfomation/ deptname:" + LSApplication.gUser.getDeptname());
+			Log.i("IPC_Response",
+					"UserInfomation/ usertype:" + LSApplication.gUser.getUsertype());
+
+			return true;
+		}
+		return false;
 	}
+	
+	public void ErrorPopUp() {
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				new AlertDialog.Builder(mContext)
+						.setTitle(R.string.popup_alert_title_info)
+						.setMessage(IPC.getInstance().getLastResponseErrorMsg())
+						.setPositiveButton(R.string.yes,
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog, int arg1) {
+										new GetDataTask().execute();
+									}
+								})
+						.setNegativeButton(R.string.no, new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+								// 로그인 실패
+								// go to 로그인&회원가입
+								finish();
+
+								Intent intent = new Intent(mContext,
+										GuestLoginActivity.class);
+								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(intent); // 새로운 액티비티 실행~~
+								overridePendingTransition(R.anim.alpha2000,
+										R.anim.fadeout);
+							}
+						}).show();
+			}
+		});
+	}
+	
+	public void IndicatorAnimationStop()
+	{
+		AnimationDrawable frameAnimation = (AnimationDrawable) mIvAnimation.getBackground();
+        frameAnimation.stop();
+        mIvAnimation.setVisibility(View.INVISIBLE);
+	}	
 }
