@@ -48,6 +48,9 @@ public class IPCHeader {
 				+ "\"device_id\":\""
 				+ deviceID
 				+ "\","
+				+ "\"access_token\":\""
+				+ access_token
+				+ "\","
 				+ "\"code\":\"00"
 				+ "\","
 				+ "\"msg\":\"\"}";

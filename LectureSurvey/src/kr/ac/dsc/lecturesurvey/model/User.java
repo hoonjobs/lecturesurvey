@@ -5,9 +5,10 @@ import java.io.Serializable;
 public class User implements Serializable {
 
 	private int uid;
-	private String email;
 	private String name;
 	private String deptname;
+	private String studentID;
+	private String email;
 	private int usertype;	// 0: 학생, 1:교수
 	
 	public User() {
@@ -18,39 +19,48 @@ public class User implements Serializable {
 		this.deptname = "";
 		this.usertype = -1;
 	}
-	
-	public User(int uid, String email, String name, String deptname, int usertype) {
+
+	public User(int uid, String name, String deptname, String studentID,
+			String email, int usertype) {
 		super();
 		this.uid = uid;
 		this.name = name;
 		this.deptname = deptname;
+		this.studentID = studentID;
 		this.email = email;
 		this.usertype = usertype;
 	}
-	
+
 	public int getUid() {
 		return uid;
 	}
+
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
-	public int getUsertype() {
-		return usertype;
-	}
-	public void setUsertype(int usertype) {
-		this.usertype = usertype;
-	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getDeptname() {
 		return deptname;
 	}
+
 	public void setDeptname(String deptname) {
 		this.deptname = deptname;
+	}
+
+	public String getStudentID() {
+		return studentID;
+	}
+
+	public void setStudentID(String studentID) {
+		this.studentID = studentID;
 	}
 
 	public String getEmail() {
@@ -59,6 +69,14 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public int getUsertype() {
+		return usertype;
+	}
+
+	public void setUsertype(int usertype) {
+		this.usertype = usertype;
 	}
 	
 	

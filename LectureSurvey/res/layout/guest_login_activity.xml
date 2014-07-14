@@ -13,16 +13,24 @@
         android:layout_marginBottom="10dp"
         android:src="@drawable/bg_top_logo" />
 
-    <kr.ac.dsc.lecturesurvey.ImageBtn
-        android:id="@+id/guest_login_btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_login" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
 
-    <kr.ac.dsc.lecturesurvey.ImageBtn
-        android:id="@+id/guest_login_btnSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_register" />
+        <kr.ac.dsc.lecturesurvey.ImageBtn
+            android:id="@+id/guest_login_btnLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_login" />
+
+        <kr.ac.dsc.lecturesurvey.ImageBtn
+            android:id="@+id/guest_login_btnSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_register" />
+
+    </LinearLayout>
 
 </LinearLayout>

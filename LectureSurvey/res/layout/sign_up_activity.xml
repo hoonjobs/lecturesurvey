@@ -1,83 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00b2ed" >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bg_top_logo" />
+        android:background="#00b2ed" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="@dimen/header_footer_top_bottom_padding" >
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_top_logo" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/dot_line_repeat"
-                android:orientation="vertical" >
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/manual_login_btn_bg"
+                android:padding="@dimen/header_footer_top_bottom_padding" >
+
+                <EditText
+                    android:id="@+id/sign_up_etName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:hint="@string/name"
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:singleLine="true" >
+
+                    <requestFocus />
+                </EditText>
+
+                <EditText
+                    android:id="@+id/sign_up_etDept"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:hint="@string/deptname"
+                    android:inputType="text"
+                    android:maxLength="20"
+                    android:singleLine="true" >
+                </EditText>
+
+                <EditText
+                    android:id="@+id/sign_up_etStudentID"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:hint="@string/studentID"
+                    android:inputType="text"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/sign_up_etEmail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/sign_up_etPassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+                <kr.ac.dsc.lecturesurvey.ImageBtn
+                    android:id="@+id/sign_up_btnRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/btn_register" />
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/sign_up_tvNick"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:hint="이름"
-                android:maxLength="10"
-                android:singleLine="true" >
-
-                <requestFocus />
-            </EditText>
-
-            <EditText
-                android:id="@+id/sign_up_tvDept"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:hint="학과"
-                android:maxLength="20"
-                android:singleLine="true" >
-            </EditText>
-            
-            <EditText
-                android:id="@+id/sign_up_tvStudentNumber"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:hint="학번"
-                android:inputType="text|number"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/sign_up_tvPassword"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:hint="비밀번호"
-                android:inputType="textPassword"
-                android:singleLine="true" />
-
-            <kr.ac.dsc.lecturesurvey.ImageBtn
-                android:id="@+id/sign_up_btnRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/btn_register" />
         </LinearLayout>
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/spinner_layout" />
+</FrameLayout>

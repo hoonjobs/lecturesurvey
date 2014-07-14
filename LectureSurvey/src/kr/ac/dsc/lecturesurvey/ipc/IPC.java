@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import kr.ac.dsc.lecturesurvey.model.Survey;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -81,7 +83,7 @@ public class IPC {
 		JsonElement jsonElement = parser.parse(json);
 		
 		String rstJSON = getGson().toJson(jsonElement);
-		Log.i("IPC_toServer", rstJSON);
+		Log.i("IPC_Request", rstJSON);
 
 		//post Entity
 		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
@@ -107,8 +109,9 @@ public class IPC {
 		     JsonObject jsonObject = responseJson.getAsJsonObject();
 		     JsonObject header = jsonObject.getAsJsonObject("header");
 	     
-		    mResponseHeader = gson.fromJson(header, IPCHeader.class);
-		    if(!mResponseHeader.getCode().equals("00"))
+		    IPCHeader responseHeader = new IPCHeader(); 
+		    responseHeader = gson.fromJson(header, IPCHeader.class);
+		    if(!responseHeader.getCode().equals("00"))
 		    {
 		    	if(mContext != null) {
 					mContext = null;
@@ -127,7 +130,7 @@ public class IPC {
 	public JsonElement requestInitSession(IPCHeader header) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
 		String url = path.append("session/get.php").toString();
-		Log.i("IPC_toServer",url);
+		Log.i("IPC_Request",url);
 		
 		String rstJSON = "";
 		String JSON_Header = header.getHeaderJSON();
@@ -139,21 +142,63 @@ public class IPC {
 
 	public JsonElement requestLogin(IPCHeader header, String email, String pw) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
-		String url = path.append("session/get.php").toString();
-		Log.i("IPC_toServer",url);
+		String url = path.append("login/get.php").toString();
+		Log.i("IPC_Request",url);
 		
 		String rstJSON = "";
 		String JSON_Header = header.getHeaderJSON();
 		String JSON_Body = "\"body\":{ " +
 				"\"email\":\"" +
-				email +	//access_token
+				email +
 				"\", " +
 				"\"pw\":\"" +
-				pw + //위도
+				pw +
 				"\" " +
 				"}";
 		
+		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+		
 		return RequestJSON(url, rstJSON);
 	}
-	
+
+	public JsonElement requestSignUp(IPCHeader header, String name,
+		String dept, String studentID, String email, String password) {
+		StringBuffer path = new StringBuffer(ServerBaseUrl);
+		String url = path.append("member/post.php").toString();
+		Log.i("IPC_Request", url);
+
+		String rstJSON = "";
+		String JSON_Header = header.getHeaderJSON();
+		String JSON_Body = "\"body\":{ " 
+				+ "\"name\":\"" + name + "\", "
+				+ "\"dept\":\"" + dept + "\", "
+				+ "\"studentID\":\"" + studentID + "\", "
+				+ "\"email\":\"" + email + "\", "
+				+ "\"pw\":\"" + password + "\" "
+				+ "}";
+
+		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+
+		return RequestJSON(url, rstJSON);
+	}
+
+	public JsonElement requestSurveyPost(IPCHeader header, Survey survey) {
+			StringBuffer path = new StringBuffer(ServerBaseUrl);
+			String url = path.append("survey/post.php").toString();
+			Log.i("IPC_Request", url);
+
+			String rstJSON = "";
+			String JSON_Header = header.getHeaderJSON();
+			String JsonSurvey = gson.toJson(survey);
+			String JSON_Body = "\"body\":{ " + JsonSurvey 
+//					+ "\"name\":\"" + name + "\", "
+//					+ "\"dept\":\"" + dept + "\", "
+//					+ "\"date\":\"" + date + "\", "
+//					+ "\"msg\":\"" + msg + "\" "
+					+ "}";
+
+			rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+
+			return RequestJSON(url, rstJSON);
+		}	
 }

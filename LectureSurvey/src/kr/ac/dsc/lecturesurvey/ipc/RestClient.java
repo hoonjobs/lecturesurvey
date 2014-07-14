@@ -107,7 +107,7 @@ public class RestClient {
 					// A Simple JSON Response Read
 					InputStream instream = entity.getContent();
 					String result= convertStreamToString(instream);
-					Log.i("IPC_From",result);
+					Log.i("IPC_Response",result);
 
 					JsonParser parser = new JsonParser();
 					

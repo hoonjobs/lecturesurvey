@@ -183,8 +183,6 @@ public class InitActivity extends Activity {
 								// TODO Auto-generated method stub
 								// 로그인 실패
 								// go to 로그인&회원가입
-								finish();
-
 								Intent intent = new Intent(mContext,
 										GuestLoginActivity.class);
 								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

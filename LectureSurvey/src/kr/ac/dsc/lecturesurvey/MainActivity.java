@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import kr.ac.dsc.lecturesurvey.model.Survey;
@@ -32,8 +33,25 @@ public class MainActivity extends Activity {
 		
 		//getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
 		setContentView(R.layout.main_activity);
+		
+		
+		if(LSApplication.gUser.getUsertype() >= 0) {
+			ImageBtn btnRegSurvey = (ImageBtn) findViewById(R.id.activity_header_btnRegSurvey);
+			btnRegSurvey.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(MainActivity.this, RegSurveyActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(intent); //새로운 액티비티 실행~~
+					overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
+				}
+			});
+			btnRegSurvey.setVisibility(View.VISIBLE);
+		}
+		 
 		
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.main_activity_listview);
 		
