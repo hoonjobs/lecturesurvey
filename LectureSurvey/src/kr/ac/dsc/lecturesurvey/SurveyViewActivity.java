@@ -1,5 +1,10 @@
 package kr.ac.dsc.lecturesurvey;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import kr.ac.dsc.lecturesurvey.model.Survey;
 import android.app.Activity;
 import android.content.Intent;
@@ -74,7 +79,17 @@ public class SurveyViewActivity extends Activity {
 		tvLectureName.setText(survey.getLectureName());
 		
 		//강의일
-		tvLectureDate.setText("강의일 : " + survey.getLectureDate());
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+		SimpleDateFormat outputfmt = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.KOREA);
+		Date dateLecture = null;
+		try {
+			dateLecture = fmt.parse(survey.getLectureDate());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		tvLectureDate.setText("강의일 : " + outputfmt.format(dateLecture));
 
 		//설문 메세지
 		tvSurveyMsg.setText(survey.getMsg());

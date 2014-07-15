@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Survey implements Serializable {
 
 	private int idx;		//설문지 번호
-	private int lectureIdx;	//해당 강의 번호	
 	private String lectureName;	//강의명
 	private String lectureDate;	//강의일
 	private String deptName;	//강의 학과명
@@ -22,12 +21,11 @@ public class Survey implements Serializable {
 	
 
 	//학생
-	public Survey(int idx, int lectureIdx, String lectureName, String lectureDate,
+	public Survey(int idx, String lectureName, String lectureDate,
 			String deptName, String profName, int status, String msg,
 			boolean answerSurvey) {
 		super();
 		this.idx = idx;
-		this.lectureIdx = lectureIdx;
 		this.lectureName = lectureName;
 		this.lectureDate = lectureDate;
 		this.deptName = deptName;
@@ -38,13 +36,12 @@ public class Survey implements Serializable {
 	}
 
 	//교수
-	public Survey(int idx, int lectureIdx, String lectureName, String lectureDate,
+	public Survey(int idx, String lectureName, String lectureDate,
 			String deptName, String profName, int status, String regDate,
 			String msg,
 			int answerCnt1, int answerCnt2, int answerCnt3) {
 		super();
 		this.idx = idx;
-		this.lectureIdx = lectureIdx;
 		this.lectureName = lectureName;
 		this.lectureDate = lectureDate;
 		this.deptName = deptName;
@@ -63,14 +60,6 @@ public class Survey implements Serializable {
 
 	public void setIdx(int idx) {
 		this.idx = idx;
-	}
-
-	public int getLectureIdx() {
-		return lectureIdx;
-	}
-
-	public void setLectureIdx(int lectureIdx) {
-		this.lectureIdx = lectureIdx;
 	}
 
 	public String getLectureName() {

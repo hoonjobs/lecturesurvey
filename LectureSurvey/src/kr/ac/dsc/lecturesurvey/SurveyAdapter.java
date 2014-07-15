@@ -1,6 +1,10 @@
 package kr.ac.dsc.lecturesurvey;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import kr.ac.dsc.lecturesurvey.model.Survey;
 import android.content.Context;
@@ -73,9 +77,18 @@ public class SurveyAdapter extends BaseAdapter {
 		name.setText(listarray.get(position).getLectureName());
 		
 		//강의일
-		TextView date = (TextView) convertView
+		TextView tvDate = (TextView) convertView
 				.findViewById(R.id.survey_list_row_tvLectureDate);
-		date.setText(listarray.get(position).getLectureDate());
+		
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+		SimpleDateFormat outputfmt = new SimpleDateFormat("yyyy-MM-dd \r\n hh:mm a", Locale.KOREA);
+		try {
+			Date dateLecture = fmt.parse(listarray.get(position).getLectureDate());
+			tvDate.setText(outputfmt.format(dateLecture));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return convertView;
 		

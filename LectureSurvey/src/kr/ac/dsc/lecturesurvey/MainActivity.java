@@ -2,8 +2,13 @@ package kr.ac.dsc.lecturesurvey;
 
 import java.util.ArrayList;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
 import android.app.Activity;
@@ -11,10 +16,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import kr.ac.dsc.lecturesurvey.ipc.IPC;
 import kr.ac.dsc.lecturesurvey.model.Survey;
 
 public class MainActivity extends Activity {
@@ -25,6 +32,11 @@ public class MainActivity extends Activity {
 	private SurveyAdapter adapterSurvey;
 
 	protected boolean initFlag = false;
+	
+	private int mCurrentPage = 0;
+	private int mTotalPage = 0;
+
+	public boolean bRefresh = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +57,7 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(MainActivity.this, RegSurveyActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent); //새로운 액티비티 실행~~
+					startActivityForResult(intent, 0); //새로운 액티비티 실행~~
 					overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
 				}
 			});
@@ -67,9 +79,23 @@ public class MainActivity extends Activity {
 				mPullRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 				
 				// Do work to refresh the list here.
+				bRefresh = true;
 				new GetDataTask().execute();
 			}
 		});
+		
+		// Add an end-of-list listener
+		mPullRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+
+			@Override
+			public void onLastItemVisible() {
+				//Toast.makeText(FeedActivity.this, "End of List!", Toast.LENGTH_SHORT).show();
+				if(mTotalPage > mCurrentPage) {
+					new GetDataTask().execute();
+				}
+				
+			}
+		});		
 		
 		ListView actualListView = mPullRefreshListView.getRefreshableView();
 
@@ -100,7 +126,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			CreateList();
+			//CreateList();
+			if(bRefresh) mCurrentPage = 0;
+			RequestSurveyList();
 			return true;
 		}
 
@@ -135,21 +163,79 @@ public class MainActivity extends Activity {
 	
 	private void CreateList() {
 		ResetList();
-		arrSurvey.add(new Survey(1, 1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(2, 2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(3, 3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(4, 4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(1, 1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(2, 2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(3, 3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(4, 4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(1, 1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(2, 2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(3, 3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(4, 4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
+		arrSurvey.add(new Survey(4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
 	}
 	
 	protected void ResetList() {
-		arrSurvey.clear();
+    	arrSurvey.clear();
+    	bRefresh = false;
 	}
+	
+	private void RequestSurveyList() {
+		JsonElement json = IPC.getInstance().requestSurveyList(LSApplication.gRequestHeader, mCurrentPage+1); 
+		if(ResponseSurveyList(json))
+		{
+			
+		}
+	}
+
+	private boolean ResponseSurveyList(JsonElement json) {
+		
+		if(json == null) return false;
+		
+		if (json.isJsonObject()) {
+		    JsonObject jsonObject = json.getAsJsonObject();
+		    //JsonObject header = jsonObject.getAsJsonObject("header");
+		    JsonObject body = jsonObject.getAsJsonObject("body");
+		   
+		    
+			int totpage = body.get("totPage").getAsInt();
+		    if(totpage < 1) return false;
+		    if(totpage < mCurrentPage) { return false; }
+		    
+		    mTotalPage = totpage;
+		    mCurrentPage = body.get("currPage").getAsInt();
+		    
+		    JsonArray Items = body.getAsJsonArray("items");
+
+		    ArrayList<Survey> arrNewSurveys;
+		    arrNewSurveys = IPC.getInstance().getGson().fromJson(Items, new TypeToken<ArrayList<Survey>>(){}.getType());
+		    
+		    if(bRefresh) {
+		    	ResetList();
+		    }
+		    
+		    arrSurvey.addAll(arrNewSurveys);
+		    
+		    return true;
+		}
+		return false;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode != RESULT_OK)
+		{
+			return;
+		}
+		
+		Log.i(getClass().getSimpleName(), "onActivityResult :: refresh list");
+		bRefresh = true;
+		new GetDataTask().execute();
+		mPullRefreshListView.setRefreshing(false);
+	}
+	
 }

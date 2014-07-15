@@ -147,14 +147,10 @@ public class IPC {
 		
 		String rstJSON = "";
 		String JSON_Header = header.getHeaderJSON();
-		String JSON_Body = "\"body\":{ " +
-				"\"email\":\"" +
-				email +
-				"\", " +
-				"\"pw\":\"" +
-				pw +
-				"\" " +
-				"}";
+		String JSON_Body = "\"body\":{ "
+				+ "\"email\":\"" + email + "\","
+				+ "\"pw\":\"" +	pw + "\""
+				+ "}";
 		
 		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 		
@@ -170,11 +166,11 @@ public class IPC {
 		String rstJSON = "";
 		String JSON_Header = header.getHeaderJSON();
 		String JSON_Body = "\"body\":{ " 
-				+ "\"name\":\"" + name + "\", "
-				+ "\"dept\":\"" + dept + "\", "
-				+ "\"studentID\":\"" + studentID + "\", "
-				+ "\"email\":\"" + email + "\", "
-				+ "\"pw\":\"" + password + "\" "
+				+ "\"name\":\"" + name + "\","
+				+ "\"dept\":\"" + dept + "\","
+				+ "\"studentID\":\"" + studentID + "\","
+				+ "\"email\":\"" + email + "\","
+				+ "\"pw\":\"" + password + "\""
 				+ "}";
 
 		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
@@ -182,6 +178,22 @@ public class IPC {
 		return RequestJSON(url, rstJSON);
 	}
 
+	public JsonElement requestSurveyList(IPCHeader header, int page ) {
+			StringBuffer path = new StringBuffer(ServerBaseUrl);
+			String url = path.append("survey/get.php").toString();
+			Log.i("IPC_Request", url);
+
+			String rstJSON = "";
+			String JSON_Header = header.getHeaderJSON();
+			String JSON_Body = "\"body\":{ " 
+					+ "\"page\":" + page
+					+ "}";
+
+			rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+
+			return RequestJSON(url, rstJSON);
+		}
+	
 	public JsonElement requestSurveyPost(IPCHeader header, Survey survey) {
 			StringBuffer path = new StringBuffer(ServerBaseUrl);
 			String url = path.append("survey/post.php").toString();
@@ -190,12 +202,12 @@ public class IPC {
 			String rstJSON = "";
 			String JSON_Header = header.getHeaderJSON();
 			String JsonSurvey = gson.toJson(survey);
-			String JSON_Body = "\"body\":{ " + JsonSurvey 
+			String JSON_Body = "\"body\": " + JsonSurvey; 
 //					+ "\"name\":\"" + name + "\", "
 //					+ "\"dept\":\"" + dept + "\", "
 //					+ "\"date\":\"" + date + "\", "
 //					+ "\"msg\":\"" + msg + "\" "
-					+ "}";
+//					+ "";
 
 			rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 

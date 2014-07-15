@@ -114,21 +114,12 @@ public class RegSurveyActivity extends Activity {
 	private void updateDisplay()
 	{
 		mCalendar.set(mYear, mMonth, mDay, mHour, mMinute, 0);
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a", Locale.KOREA);
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.KOREA);
 		
 		String time = fmt.format(mCalendar.getTime());
 		tvLectureDate.setText(time);
 
 		Toast.makeText(RegSurveyActivity.this, time, Toast.LENGTH_SHORT).show();
-		
-//		tvLectureDate.setText(new StringBuilder()
-//				.append(mYear).append(" ")
-//				.append(mMonth).append("-")
-//	            .append(mDay).append("-")
-//	            .append(mDay).append(" ")
-//	            .append(mHour).append(":")
-//	            .append(mMinute).append(":")
-//	            );
 	}
 	
 	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -161,7 +152,9 @@ public class RegSurveyActivity extends Activity {
 
 		String lectureName = etLectureName.getText().toString();
 		String lectureDept = etLectureDept.getText().toString();
-		String lectureDate = tvLectureDate.getText().toString();
+
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+		String lectureDate = fmt.format(mCalendar.getTime());
 		String surveyMsg = etSurveyMsg.getText().toString();
 		
 		if(lectureName.length() < 1)
@@ -199,18 +192,22 @@ public class RegSurveyActivity extends Activity {
 		
 		showLoadingLayer(true);
 
-		Survey survey = new Survey(0, 0, lectureName, lectureDate, lectureDept, LSApplication.gUser.getName(), 0, surveyMsg, false);
+		Survey survey = new Survey(0, lectureName, lectureDate, lectureDept, LSApplication.gUser.getName(), 0, surveyMsg, false);
 		JsonElement responseJson = IPC.getInstance().requestSurveyPost(LSApplication.gRequestHeader, survey); 
 		if(ResponseSurveyPost(responseJson)) {
+			//등록성공
+			showLoadingLayer(false);
+
+			LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, R.string.success_save, new DialogInterface.OnClickListener() {
+	        	public void onClick(DialogInterface dialog, int which) {
+	        		// TODO Auto-generated method stub
+	    			setResult(RESULT_OK);
+	    			finish();
+	    			overridePendingTransition( R.anim.splashfadein, R.anim.right_out);
+        		}
+	        } );
 			
 		}
-//		JsonElement jsonLogin = IPC.RequestCS030(this, nick, "", email, password, "", "", "");
-//		if(ResponseCS030(jsonLogin))
-//		{
-//			
-//			RequestCS020();
-//			
-//		}
 		
 		showLoadingLayer(false);
 		

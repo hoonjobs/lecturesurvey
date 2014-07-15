@@ -116,11 +116,13 @@
                     android:id="@+id/reg_survey_etSurveyMsg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
                     android:layout_marginBottom="10dp"
                     android:ems="10"
+                    android:gravity="top"
+                    android:hint="@string/hint_reg_survey_msg"
                     android:inputType="textMultiLine"
-                    android:minHeight="100dp" />
+                    android:minHeight="100dp"
+                    android:textSize="12sp" />
 
                 <kr.ac.dsc.lecturesurvey.ImageBtn
                     android:id="@+id/reg_survey_post"
