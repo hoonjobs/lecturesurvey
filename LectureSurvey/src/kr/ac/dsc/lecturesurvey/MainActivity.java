@@ -89,7 +89,6 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onLastItemVisible() {
-				//Toast.makeText(FeedActivity.this, "End of List!", Toast.LENGTH_SHORT).show();
 				if(mTotalPage > mCurrentPage) {
 					new GetDataTask().execute();
 				}
@@ -126,7 +125,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			//CreateList();
 			if(bRefresh) mCurrentPage = 0;
 			RequestSurveyList();
 			return true;
@@ -160,22 +158,6 @@ public class MainActivity extends Activity {
 			}
 	   }
 	};
-	
-	private void CreateList() {
-		ResetList();
-		arrSurvey.add(new Survey(1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(1, "Android 실습-1", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(2, "Android 실습-2", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(3, "Android 실습-3", "2014-07-12", "컴퓨터소프트웨어학과", "최성훈", 1, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-		arrSurvey.add(new Survey(4, "Android 실습-4", "2014-07-12", "컴퓨터소프트웨어학과", "최영철", 2, "설문 메세지입니다.\r\n가볍게 설문에 응답해주세요.\r\n설문에 응답시 가산점이 부여됩니다.", false));
-	}
 	
 	protected void ResetList() {
     	arrSurvey.clear();

@@ -109,9 +109,8 @@ public class IPC {
 		     JsonObject jsonObject = responseJson.getAsJsonObject();
 		     JsonObject header = jsonObject.getAsJsonObject("header");
 	     
-		    IPCHeader responseHeader = new IPCHeader(); 
-		    responseHeader = gson.fromJson(header, IPCHeader.class);
-		    if(!responseHeader.getCode().equals("00"))
+		    mResponseHeader = gson.fromJson(header, IPCHeader.class);
+		    if(!mResponseHeader.getCode().equals("00"))
 		    {
 		    	if(mContext != null) {
 					mContext = null;
@@ -202,7 +201,8 @@ public class IPC {
 			String rstJSON = "";
 			String JSON_Header = header.getHeaderJSON();
 			String JsonSurvey = gson.toJson(survey);
-			String JSON_Body = "\"body\": " + JsonSurvey; 
+			String JSON_Body = "\"body\": " + JsonSurvey;
+			
 //					+ "\"name\":\"" + name + "\", "
 //					+ "\"dept\":\"" + dept + "\", "
 //					+ "\"date\":\"" + date + "\", "

@@ -27,15 +27,13 @@ import com.google.gson.JsonParser;
 import android.util.Log;
 
 public class RestClient {
-	
-	static boolean bProcessing = false;
 
 	private String convertStreamToString(InputStream is) {
 		/*
-		 * To convert the InputStream to String we use the BufferedReader.readLine()
-		 * method. We iterate until the BufferedReader return null which means
-		 * there's no more data to read. Each line will appended to a StringBuilder
-		 * and returned as String.
+		 * To convert the InputStream to String we use the
+		 * BufferedReader.readLine() method. We iterate until the BufferedReader
+		 * return null which means there's no more data to read. Each line will
+		 * appended to a StringBuilder and returned as String.
 		 */
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		StringBuilder sb = new StringBuilder();
@@ -58,25 +56,23 @@ public class RestClient {
 		return sb.toString();
 	}
 
-
-	/* This is a test function which will connects to a given
-	 * rest service and prints it's response to Android Log with
-	 * labels "Praeda".
+	/*
+	 * This is a test function which will connects to a given rest service and
+	 * prints it's response to Android Log with labels "Praeda".
 	 */
-	public JsonElement Request(String url, ArrayList<NameValuePair> params)
-	{
+	public JsonElement Request(String url, ArrayList<NameValuePair> params) {
 
-		//return Map
+		// return Map
 		JsonElement json = null;
 
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpParams httpparams = httpclient.getParams();
 		HttpConnectionParams.setConnectionTimeout(httpparams, 5000);
-		HttpConnectionParams.setSoTimeout(httpparams, 5000);		
+		HttpConnectionParams.setSoTimeout(httpparams, 5000);
 
 		// Prepare a request object
-		//HttpGet httpget = new HttpGet(url);  //get 
-		HttpPost httppost = new HttpPost(url); //post
+		// HttpGet httpget = new HttpGet(url); //get
+		HttpPost httppost = new HttpPost(url); // post
 		UrlEncodedFormEntity ent;
 		try {
 			ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
@@ -89,121 +85,104 @@ public class RestClient {
 		// Execute the request
 		HttpResponse response;
 
-		//while(bProcessing == false) {
-			try {
-				response = httpclient.execute(httppost);
-				// Examine the response status
-				Log.i("IPC_From",response.getStatusLine().toString());
+		try {
+			response = httpclient.execute(httppost);
+			// Examine the response status
+			Log.i("IPC_From", response.getStatusLine().toString());
 
-				// Get hold of the response entity
-				HttpEntity entity = response.getEntity();
-				// If the response does not enclose an entity, there is no need
-				// to worry about connection release
+			// Get hold of the response entity
+			HttpEntity entity = response.getEntity();
+			// If the response does not enclose an entity, there is no need
+			// to worry about connection release
 
-				if (entity != null) {
-					
-					bProcessing = true;
+			if (entity != null) {
 
-					// A Simple JSON Response Read
-					InputStream instream = entity.getContent();
-					String result= convertStreamToString(instream);
-					Log.i("IPC_Response",result);
+				// A Simple JSON Response Read
+				InputStream instream = entity.getContent();
+				String result = convertStreamToString(instream);
+				Log.i("IPC_Response", result);
 
-					JsonParser parser = new JsonParser();
-					
-					try {
-						json = (JsonElement) parser.parse(result);
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
+				JsonParser parser = new JsonParser();
 
-					// Closing the input stream will trigger connection release
-					instream.close();
+				try {
+					json = (JsonElement) parser.parse(result);
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
 
-
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
+				// Closing the input stream will trigger connection release
+				instream.close();
 			}
-		//}
-		
-		bProcessing = false;
-		
+
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+
 		return json;
 	}
-	
-	public JsonElement RequestMultipart(String url, MultipartEntity params)
-	{
 
-		//return Map
+	public JsonElement RequestMultipart(String url, MultipartEntity params) {
+
+		// return Map
 		JsonElement json = null;
 
-		//URLEncoder.encode("userid", "UTF-8");
-		//new BasicNameValuePair("userid", URLEncoder.encode("userid", "UTF-8"));
-		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpParams httpparams = httpclient.getParams();
 		HttpConnectionParams.setConnectionTimeout(httpparams, 5000);
-		HttpConnectionParams.setSoTimeout(httpparams, 5000);		
+		HttpConnectionParams.setSoTimeout(httpparams, 5000);
 
 		// Prepare a request object
-		//HttpGet httpget = new HttpGet(url);  //get 
-		HttpPost httppost = new HttpPost(url); //post
-	    httppost.setHeader("Connection", "Keep-Alive");
-	    httppost.setHeader("Accept-Charset", "UTF-8");
-	    httppost.setHeader("ENCTYPE", "multipart/form-data");
+		// HttpGet httpget = new HttpGet(url); //get
+		HttpPost httppost = new HttpPost(url); // post
+		httppost.setHeader("Connection", "Keep-Alive");
+		httppost.setHeader("Accept-Charset", "UTF-8");
+		httppost.setHeader("ENCTYPE", "multipart/form-data");
 		httppost.setEntity(params);
 
 		// Execute the request
 		HttpResponse response;
-		//while(bProcessing == false) {		
-			try {
-				response = httpclient.execute(httppost);
-				// Examine the response status
-				Log.i("IPC_From",response.getStatusLine().toString());
 
-				// Get hold of the response entity
-				HttpEntity entity = response.getEntity();
-				// If the response does not enclose an entity, there is no need
-				// to worry about connection release
+		try {
+			response = httpclient.execute(httppost);
+			// Examine the response status
+			Log.i("IPC_From", response.getStatusLine().toString());
 
-				if (entity != null) {
-					
-					bProcessing = true;
-					
-					// A Simple JSON Response Read
-					InputStream instream = entity.getContent();
-					String result= convertStreamToString(instream);
-					Log.i("IPC_From",result);
+			// Get hold of the response entity
+			HttpEntity entity = response.getEntity();
+			// If the response does not enclose an entity, there is no need
+			// to worry about connection release
 
-					JsonParser parser = new JsonParser();
+			if (entity != null) {
 
-					json = (JsonElement) parser.parse(result);
+				// A Simple JSON Response Read
+				InputStream instream = entity.getContent();
+				String result = convertStreamToString(instream);
+				Log.i("IPC_From", result);
 
-					// Closing the input stream will trigger connection release
-					instream.close();
-				}
+				JsonParser parser = new JsonParser();
 
+				json = (JsonElement) parser.parse(result);
 
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
+				// Closing the input stream will trigger connection release
+				instream.close();
 			}
-		//}
-		
-		bProcessing = false;
-		
+
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+
 		return json;
 	}
 
