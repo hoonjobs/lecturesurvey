@@ -90,6 +90,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:src="@drawable/btn_survey" />
+
+            <TextView
+                android:id="@+id/survey_view_tvSurveyAlertMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alert_msg_survey_ready"
+                android:visibility="gone"
+                android:gravity="center" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

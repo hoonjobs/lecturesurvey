@@ -162,19 +162,10 @@ public class InitActivity extends Activity {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				new AlertDialog.Builder(mContext)
-						.setTitle(R.string.popup_alert_title_info)
-						.setMessage(IPC.getInstance().getLastResponseErrorMsg())
-						.setPositiveButton(R.string.yes,
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int arg1) {
-										new GetDataTask().execute();
-									}
-								})
-						.setNegativeButton(R.string.no, new OnClickListener() {
+				LSApplication.ErrorPopup(mContext,
+						R.string.popup_alert_title_info, IPC.getInstance()
+								.getLastResponseErrorMsg(),
+						new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
@@ -188,7 +179,7 @@ public class InitActivity extends Activity {
 								overridePendingTransition(R.anim.alpha2000,
 										R.anim.fadeout);
 							}
-						}).show();
+						});
 			}
 		});
 	}

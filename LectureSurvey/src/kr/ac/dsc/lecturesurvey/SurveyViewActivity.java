@@ -23,6 +23,8 @@ public class SurveyViewActivity extends Activity {
 	private TextView tvLectureName;
 	private TextView tvLectureDate;
 	private TextView tvSurveyMsg;
+	
+	private TextView tvSurveyAlertMsg;
 
 	private ImageBtn btn_survey;
 	
@@ -44,29 +46,40 @@ public class SurveyViewActivity extends Activity {
 		tvLectureDate = (TextView)findViewById(R.id.survey_view_tvLectureDate);
 		tvSurveyMsg = (TextView)findViewById(R.id.survey_view_tvSurveyMsg);
 		
+		tvSurveyAlertMsg = (TextView)findViewById(R.id.survey_view_tvSurveyAlertMsg);
+		
 		setSurvey(mSurvey);
 		
 		btn_survey = (ImageBtn) findViewById(R.id.survey_view_btnSurvey);
-		
-		btn_survey.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(SurveyViewActivity.this, FillOutSurveyActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.putExtra("survey", mSurvey); //새로운 액티비티에 데이터를 넘겨준다
-				startActivity(intent); //새로운 액티비티 실행~~
-				overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
-			}
-		});
-		
 	}
 	
 	private void setSurvey(Survey survey) {
 		//설문중일때 아이콘
 		if(mSurvey.getStatus() < 2) {
 			icStatus.setImageResource(R.drawable.ic_alert);
+			if(mSurvey.getStatus() == 0) {
+				//설문대기중
+				//설문시작 버튼 숨김 및 Alert 메세지 visible
+				btn_survey.setVisibility(View.GONE);
+				tvSurveyAlertMsg.setVisibility(View.VISIBLE);
+				
+				//교수님일 경우 설문지의 질문들을 관리하는 액티비티로 이동 가능,
+				//교수님일 경우 설문을 시작으로 변경해야함. -> 설문시작 이미지 추가
+			} else {
+				//설문 시작중.. 설문시작 버튼 활성화
+				btn_survey.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(SurveyViewActivity.this, FillOutSurveyActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.putExtra("survey", mSurvey); //새로운 액티비티에 데이터를 넘겨준다
+						startActivity(intent); //새로운 액티비티 실행~~
+						overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
+					}
+				});
+			}
 		}
 		else {
 			icStatus.setImageResource(R.drawable.ic_star);

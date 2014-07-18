@@ -72,4 +72,12 @@ public class LSApplication extends Application {
 		ad.show();
 	}	
 	
+	public static void ErrorPopup(Context context, int titleResId, String message, DialogInterface.OnClickListener listener)
+	{
+		AlertDialog.Builder ad = new AlertDialog.Builder(context);
+		ad.setTitle(titleResId);
+		ad.setMessage(message);
+		ad.setPositiveButton(R.string.popup_alert_title_info, listener);
+		ad.show();
+	}	
 }
