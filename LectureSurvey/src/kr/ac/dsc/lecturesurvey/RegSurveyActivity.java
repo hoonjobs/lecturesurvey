@@ -10,11 +10,9 @@ import kr.ac.dsc.lecturesurvey.ipc.IPC;
 import kr.ac.dsc.lecturesurvey.model.Survey;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,7 +24,6 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -57,10 +54,8 @@ public class RegSurveyActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-//		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//				WindowManager.LayoutParams.FLAG_FULLSCREEN);         
-//		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mContext = this;
 		
@@ -80,7 +75,6 @@ public class RegSurveyActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				doPostSurvey();
-				//showLoadingLayer(true);
 			}
 		});
 		
@@ -108,7 +102,6 @@ public class RegSurveyActivity extends Activity {
 		mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
 		mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
 		mMinute = mCalendar.get(Calendar.MINUTE);
-
 	}
 	
 	private void updateDisplay()
@@ -210,7 +203,6 @@ public class RegSurveyActivity extends Activity {
 		}
 		
 		showLoadingLayer(false);
-		
 	}
 	
 	public boolean ResponseSurveyPost(JsonElement json)
@@ -218,16 +210,6 @@ public class RegSurveyActivity extends Activity {
 		if(json == null) return false;
 		
 		if (json.isJsonObject()) {
-		     JsonObject jsonObject = json.getAsJsonObject();
-		     JsonObject body = jsonObject.getAsJsonObject("body");
-
-//		    if(body.get("access_token") == null) return false;
-//		    
-//		    String access_token = body.get("access_token").getAsString();
-//			Log.i("IPC_Response","access_token:"+access_token);
-//	        
-//			LSApplication.gRequestHeader.setAccess_token(access_token);
-
 	        return true;
 		}
 		return false;
@@ -245,7 +227,6 @@ public class RegSurveyActivity extends Activity {
 		}		
 	}
 	
-	
 	public boolean validEmail(String email) {
 	    Pattern pattern = Patterns.EMAIL_ADDRESS;
 	    return pattern.matcher(email).matches();
@@ -258,7 +239,6 @@ public class RegSurveyActivity extends Activity {
 		}
 		return false;
 	}
-	
 	
 	@Override
 	public void finish() {

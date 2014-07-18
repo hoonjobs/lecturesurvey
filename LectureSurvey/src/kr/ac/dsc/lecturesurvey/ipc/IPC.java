@@ -179,7 +179,7 @@ public class IPC {
 
 	public JsonElement requestSurveyList(IPCHeader header, int page ) {
 			StringBuffer path = new StringBuffer(ServerBaseUrl);
-			String url = path.append("survey/get.php").toString();
+			String url = path.append("survey/list/get.php").toString();
 			Log.i("IPC_Request", url);
 
 			String rstJSON = "";
