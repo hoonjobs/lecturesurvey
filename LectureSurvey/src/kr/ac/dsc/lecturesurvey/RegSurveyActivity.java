@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -186,23 +187,49 @@ public class RegSurveyActivity extends Activity {
 		showLoadingLayer(true);
 
 		Survey survey = new Survey(0, lectureName, lectureDate, lectureDept, LSApplication.gUser.getName(), 0, surveyMsg, false);
-		JsonElement responseJson = IPC.getInstance().requestSurveyPost(LSApplication.gRequestHeader, survey); 
-		if(ResponseSurveyPost(responseJson)) {
-			//등록성공
+		
+		new GetDataTask().execute(survey);
+	}
+	
+	private class GetDataTask extends AsyncTask<Survey, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Survey... params) {
+			return RequestPost(params[0]);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+
 			showLoadingLayer(false);
 
-			LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, R.string.success_save, new DialogInterface.OnClickListener() {
-	        	public void onClick(DialogInterface dialog, int which) {
-	        		// TODO Auto-generated method stub
-	    			setResult(RESULT_OK);
-	    			finish();
-	    			overridePendingTransition( R.anim.splashfadein, R.anim.right_out);
-        		}
-	        } );
-			
+			if (result) {
+				// 등록성공
+				LSApplication.ErrorPopup(mContext,
+						R.string.popup_alert_title_info, R.string.success_save,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								setResult(RESULT_OK);
+								finish();
+								overridePendingTransition(R.anim.splashfadein,
+										R.anim.right_out);
+							}
+						});
+			} else {
+				ErrorPopUp();
+			}
 		}
-		
-		showLoadingLayer(false);
+	}
+	
+	public boolean RequestPost(Survey survey) {
+		JsonElement responseJson = IPC.getInstance().requestSurveyPost(LSApplication.gRequestHeader, survey); 
+		if(ResponseSurveyPost(responseJson)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean ResponseSurveyPost(JsonElement json)
@@ -214,6 +241,11 @@ public class RegSurveyActivity extends Activity {
 		}
 		return false;
 	}	
+	
+	public void ErrorPopUp() {
+		LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, IPC
+				.getInstance().getLastResponseErrorMsg(), null);
+	}
 	
 	public void showLoadingLayer(boolean bShow)
 	{

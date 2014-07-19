@@ -2,6 +2,11 @@ package kr.ac.dsc.lecturesurvey;
 
 import java.util.regex.Pattern;
 
+
+
+import kr.ac.dsc.lecturesurvey.LSApplication;
+import kr.ac.dsc.lecturesurvey.ipc.IPC;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -11,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -153,22 +159,47 @@ public class SignUpActivity extends Activity {
 		
 		showLoadingLayer(true);
 		
+		new GetDataTask().execute(name, dept, studentID, email, password);
+
+		
+	}
+	
+	private class GetDataTask extends AsyncTask<String, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			return RequestSignUp(params[0], params[1], params[2], params[3], params[4]);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+
+			showLoadingLayer(false);
+			
+			if(result) {
+				//로그인 성공
+				//access_token sharedPreferences 에 저장
+				SharedPreferences prefs = getSharedPreferences("lecture_survey_sharedpref", MODE_PRIVATE);
+				SharedPreferences.Editor edit = prefs.edit();
+				edit.putString("acces_token", LSApplication.gRequestHeader.getAccess_token());
+				edit.commit();
+				
+				setResult(Activity.RESULT_OK);
+				finish();
+			} else {
+				ErrorPopUp();
+			}
+		}
+	}
+	
+	public boolean RequestSignUp(String name, String dept, String studentID, String email, String password) {
 		JsonElement json = kr.ac.dsc.lecturesurvey.ipc.IPC.getInstance().requestSignUp(LSApplication.gRequestHeader, name, dept, studentID, email, password); 
 		if(ResponseSignUp(json))
 		{
-			//로그인 성공
-			//access_token sharedPreferences 에 저장
-			SharedPreferences prefs = getSharedPreferences("lecture_survey_sharedpref", MODE_PRIVATE);
-			SharedPreferences.Editor edit = prefs.edit();
-			edit.putString("acces_token", LSApplication.gRequestHeader.getAccess_token());
-			edit.commit();
-			
-			setResult(Activity.RESULT_OK);
-			finish();
+			return true;
 		}
-
-		showLoadingLayer(false);
-		
+		return false;
 	}
 	
 	public boolean ResponseSignUp(JsonElement json)
@@ -189,6 +220,11 @@ public class SignUpActivity extends Activity {
 	        return true;
 		}
 		return false;
+	}
+	
+	public void ErrorPopUp() {
+		LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, IPC
+				.getInstance().getLastResponseErrorMsg(), null);
 	}
 	
 	public void showLoadingLayer(boolean bShow)
@@ -215,6 +251,8 @@ public class SignUpActivity extends Activity {
 		}
 		return false;
 	}
+	
+	
 	
 	
 	@Override

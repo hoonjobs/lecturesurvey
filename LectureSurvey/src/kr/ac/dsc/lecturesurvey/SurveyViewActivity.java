@@ -48,9 +48,10 @@ public class SurveyViewActivity extends Activity {
 		
 		tvSurveyAlertMsg = (TextView)findViewById(R.id.survey_view_tvSurveyAlertMsg);
 		
+		btn_survey = (ImageBtn) findViewById(R.id.survey_view_btnSurvey);
+
 		setSurvey(mSurvey);
 		
-		btn_survey = (ImageBtn) findViewById(R.id.survey_view_btnSurvey);
 	}
 	
 	private void setSurvey(Survey survey) {

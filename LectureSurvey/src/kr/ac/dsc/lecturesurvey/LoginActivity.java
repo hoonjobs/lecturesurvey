@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -98,22 +99,48 @@ public class LoginActivity extends Activity {
 				
 				showLoadingLayer(true);
 				
-	    		JsonElement json = IPC.getInstance().requestLogin(LSApplication.gRequestHeader, email, password); 
-	    		if(ResponseLogin(json))
-	    		{
-	    			//로그인 성공
-					//access_token sharedPreferences 에 저장
-					SharedPreferences prefs = getSharedPreferences("lecture_survey_sharedpref", MODE_PRIVATE);
-					SharedPreferences.Editor edit = prefs.edit();
-					edit.putString("acces_token", LSApplication.gRequestHeader.getAccess_token());
-					edit.commit();
-					
-					setResult(Activity.RESULT_OK);
-					finish();
-	    		}
-
+				new GetDataTask().execute(email, password);
+				
 			}
 		});		
+	}
+	
+	private class GetDataTask extends AsyncTask<String, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			return RequestLogin(params[0], params[1]);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			
+			showLoadingLayer(false);
+			
+			if(result) {
+				//로그인 성공
+				//access_token sharedPreferences 에 저장
+				SharedPreferences prefs = getSharedPreferences("lecture_survey_sharedpref", MODE_PRIVATE);
+				SharedPreferences.Editor edit = prefs.edit();
+				edit.putString("acces_token", LSApplication.gRequestHeader.getAccess_token());
+				edit.commit();
+
+				setResult(Activity.RESULT_OK);
+				finish();
+			} else {
+				ErrorPopUp();
+			}
+		}
+	}
+	
+	public boolean RequestLogin(String email, String password) {
+		JsonElement json = IPC.getInstance().requestLogin(LSApplication.gRequestHeader, email, password); 
+		if(ResponseLogin(json))
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean ResponseLogin(JsonElement json)
@@ -134,6 +161,11 @@ public class LoginActivity extends Activity {
 	        return true;
 		}
 		return false;
+	}
+	
+	public void ErrorPopUp() {
+		LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, IPC
+				.getInstance().getLastResponseErrorMsg(), null);
 	}
 
 	public boolean validEmail(String email) {

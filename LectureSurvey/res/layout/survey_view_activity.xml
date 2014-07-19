@@ -96,6 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/alert_msg_survey_ready"
+                android:textColor="#ff8499"
+                android:textStyle="bold"
                 android:visibility="gone"
                 android:gravity="center" />
 

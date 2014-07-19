@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -101,35 +100,43 @@ public class InitActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			RequestInit();
-			return true;
+			return RequestInit();
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-		}
-	}
-
-	private void RequestInit() {
-		JsonElement responseJson = IPC.getInstance().requestInitSession(
-				LSApplication.gRequestHeader);
-		if (ResponseInit(responseJson)) {
-			if (LSApplication.gUser.getUid() > 0) {
+			
+			if(result) {
 				// 로그인 성공
 				// go to main Activity
 				finish();
 
-				// Intent intent = new Intent(mContext, MainTabActivity.class);
+				// Intent intent = new Intent(mContext,
+				// MainTabActivity.class);
 				Intent intent = new Intent(mContext, MainActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent); // 새로운 액티비티 실행~~
-				overridePendingTransition(R.anim.alpha2000, R.anim.fadeout);
+				overridePendingTransition(R.anim.alpha2000,
+						R.anim.fadeout);				
+			} else {
+				ErrorPopUp();
 			}
-		} else {
-			// header에서 code 가 정상이 아닐 경우.
-			ErrorPopUp();
 		}
+	}
+
+	private boolean RequestInit() {
+		JsonElement responseJson = IPC.getInstance().requestInitSession(
+				LSApplication.gRequestHeader);
+		
+		if (ResponseInit(responseJson)) {
+			if (LSApplication.gUser.getUid() > 0) {
+				return true;
+			}
+		}
+
+		// header에서 code 가 정상이 아닐 경우.
+		return false;
 	}
 
 	private boolean ResponseInit(JsonElement response) {
@@ -157,31 +164,23 @@ public class InitActivity extends Activity {
 	}
 
 	public void ErrorPopUp() {
-		runOnUiThread(new Runnable() {
+		LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, IPC
+				.getInstance().getLastResponseErrorMsg(),
+				new OnClickListener() {
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				LSApplication.ErrorPopup(mContext,
-						R.string.popup_alert_title_info, IPC.getInstance()
-								.getLastResponseErrorMsg(),
-						new OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								// TODO Auto-generated method stub
-								// 로그인 실패
-								// go to 로그인&회원가입
-								Intent intent = new Intent(mContext,
-										GuestLoginActivity.class);
-								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-								startActivity(intent); // 새로운 액티비티 실행~~
-								overridePendingTransition(R.anim.alpha2000,
-										R.anim.fadeout);
-							}
-						});
-			}
-		});
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						// 로그인 실패
+						// go to 로그인&회원가입
+						Intent intent = new Intent(mContext,
+								GuestLoginActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent); // 새로운 액티비티 실행~~
+						overridePendingTransition(R.anim.alpha2000,
+								R.anim.fadeout);
+					}
+				});
 	}
 
 	public void IndicatorAnimationStop() {
