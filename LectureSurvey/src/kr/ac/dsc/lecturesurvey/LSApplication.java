@@ -35,6 +35,7 @@ public class LSApplication extends Application {
 		if(gRequestHeader.getDeviceID().length() < 3) {
 			String deviceID = UniqueDeviceID.getUniqueDeviceID(this);
 			setSharedPreferencesDeviceID(deviceID);
+			gRequestHeader.setDeviceID(deviceID);
 		}
 		
 		Log.i("access_token", gRequestHeader.getAccess_token());

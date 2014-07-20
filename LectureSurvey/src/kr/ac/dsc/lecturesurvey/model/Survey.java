@@ -12,6 +12,7 @@ public class Survey implements Serializable {
 	private int status; 		//설문 상태// 0:설문대기, 1:설문중, 2:설문종료
 	private String regDate;	//설문 등록일
 	private String msg;		//설문요청 메세지
+	private int uid;		//등록자 회원번호
 	
 	private int answerCnt1;	//1번 응답  수
 	private int answerCnt2; //2번 응답  수
@@ -126,6 +127,22 @@ public class Survey implements Serializable {
 		this.msg = msg;
 	}
 	
+	public int getUid() {
+		return uid;
+	}
+
+	public void setUid(int uid) {
+		this.uid = uid;
+	}
+
+	public boolean isAnswerSurvey() {
+		return answerSurvey;
+	}
+
+	public void setAnswerSurvey(boolean answerSurvey) {
+		this.answerSurvey = answerSurvey;
+	}
+
 	public int getAnswerCnt1() {
 		return answerCnt1;
 	}

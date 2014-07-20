@@ -28,6 +28,9 @@
     <string name="alert_msg_lecture_date">강의일을 선택해주세요.</string>
     <string name="alert_msg_connection">접속이 원할하지 않습니다. 다시 시도 할까요?!</string>
     <string name="alert_msg_survey_ready">설문이 준비중입니다.</string>
+    <string name="alert_msg_survey_ended">설문이 종료되었습니다.</string>
+    <string name="alert_msg_survey_delete_confirm">설문을 정말로 삭제 할까요?</string>
+    
     
     <string name="popup_alert_title_info">확인</string>
 

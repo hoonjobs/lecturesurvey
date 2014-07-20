@@ -212,5 +212,22 @@ public class IPC {
 			rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 
 			return RequestJSON(url, rstJSON);
-		}	
+		}
+	
+	public JsonElement requestSurveyDelete(IPCHeader header, int surveyIdx) {
+		StringBuffer path = new StringBuffer(ServerBaseUrl);
+		String url = path.append("survey/delete.php").toString();
+		Log.i("IPC_Request", url);
+
+		String rstJSON = "";
+		String JSON_Header = header.getHeaderJSON();
+		String JSON_Body = "\"body\":{ " 
+				+ "\"idx\":" + surveyIdx
+				+ "}";
+
+		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+
+		return RequestJSON(url, rstJSON);
+	}
+		
 }

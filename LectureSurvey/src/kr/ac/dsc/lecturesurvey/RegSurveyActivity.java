@@ -47,6 +47,8 @@ public class RegSurveyActivity extends Activity {
 	private int mYear, mMonth, mDay, mHour, mMinute;
 	
 	GregorianCalendar mCalendar;
+	DatePickerDialog mDlgDatePicker;
+	TimePickerDialog mDlgTimePicker;
 	
 	Context mContext;
 	
@@ -114,7 +116,7 @@ public class RegSurveyActivity extends Activity {
 		tvLectureDate.setText(time);
 
 		Toast.makeText(RegSurveyActivity.this, time, Toast.LENGTH_SHORT).show();
-	}
+	}	
 	
 	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
 
@@ -122,10 +124,14 @@ public class RegSurveyActivity extends Activity {
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
 			// TODO Auto-generated method stub
-			mYear = year;
-			mMonth = monthOfYear;
-			mDay = dayOfMonth;
-			new TimePickerDialog(RegSurveyActivity.this, mTimeSetListener, mHour, mMinute, false).show();			
+			if (view.isShown()) {
+				mYear = year;
+				mMonth = monthOfYear;
+				mDay = dayOfMonth;
+
+				new TimePickerDialog(RegSurveyActivity.this, mTimeSetListener,
+						mHour, mMinute, false).show();
+			}
 		}
 	};
 

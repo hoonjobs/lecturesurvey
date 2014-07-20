@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
 				Intent intent = new Intent(MainActivity.this, SurveyViewActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				intent.putExtra("survey", item); //새로운 액티비티에 데이터를 넘겨준다
-				startActivity(intent); //새로운 액티비티 실행~~
+				startActivityForResult(intent, 0); //새로운 액티비티 실행~~
 				overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
             }
         });	
