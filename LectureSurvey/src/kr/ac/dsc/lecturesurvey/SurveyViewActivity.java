@@ -73,104 +73,17 @@ public class SurveyViewActivity extends Activity {
 	}
 
 	private void setSurvey(Survey survey) {
-		// 설문중일때 아이콘
-		if (mSurvey.getStatus() < 2) {
-			if (mSurvey.getStatus() == 0)
-				icStatus.setImageResource(R.drawable.ic_question);
-			else
-				icStatus.setImageResource(R.drawable.ic_alert);
-		} else {
+		// 아이콘 변경
+		switch (mSurvey.getStatus()) {
+		case 0:
+			icStatus.setImageResource(R.drawable.ic_question);
+			break;
+		case 1:
+			icStatus.setImageResource(R.drawable.ic_alert);
+			break;
+		case 2:
 			icStatus.setImageResource(R.drawable.ic_star);
-		}
-		
-		// 교수님일 경우 설문지의 질문들을 관리하는 액티비티로 이동 가능,
-		// 교수님일 경우 설문을 시작으로 변경해야함. -> 설문시작 이미지 추가
-		if (LSApplication.gUser.getUsertype() > 0
-				&& mSurvey.getUid() == LSApplication.gUser.getUid()) {
-			findViewById(R.id.survey_view_layoutStudent).setVisibility(
-					View.GONE);
-			findViewById(R.id.survey_view_layoutProf).setVisibility(
-					View.VISIBLE);
-
-			findViewById(R.id.survey_view_btn_manage_survey_items)
-					.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View arg0) {
-							// TODO Auto-generated method stub
-							Intent intent = new Intent(SurveyViewActivity.this,
-									ManageSurveyItemsActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							intent.putExtra("survey", mSurvey); // 새로운 액티비티에
-																// 데이터를 넘겨준다
-							startActivity(intent); // 새로운 액티비티 실행~~
-							overridePendingTransition(R.anim.left_in,
-									R.anim.splashfadeout);
-						}
-					});
-
-			//교수님이지만 설문지 등록자 인지 체크
-			if(LSApplication.gUser.getUid() == mSurvey.getUid()) {
-			findViewById(R.id.survey_view_btn_delete_survey_items)
-					.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							alertDialog(mContext,
-									R.string.alert_msg_survey_delete_confirm,
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											// TODO Auto-generated method stub
-											Log.i(getClass().getSimpleName(),
-													"Delete Survey / idx :"
-															+ mSurvey.getIdx());
-											new RequestSurveyDelete()
-													.execute(mSurvey.getIdx());
-										}
-									});
-
-						}
-					});
-			} else {
-				findViewById(R.id.survey_view_btn_delete_survey_items).setVisibility(View.GONE);
-			}
-
-		} else {
-			// 학생
-			if (mSurvey.getStatus() == 0 && mSurvey.getStatus() == 2) {
-				// 설문대기중
-				// 설문시작 버튼 숨김 및 Alert 메세지 visible
-				btn_survey.setVisibility(View.GONE);
-				
-				TextView tvAlertMsg = (TextView)findViewById(R.id.survey_view_tvSurveyAlertMsg);
-				tvAlertMsg.setVisibility(View.VISIBLE);
-				
-				if(mSurvey.getStatus() == 0) tvAlertMsg.setText(R.string.alert_msg_survey_ready);
-				if(mSurvey.getStatus() == 2) tvAlertMsg.setText(R.string.alert_msg_survey_ended);				
-				
-			} else {
-				// 설문 시작중.. 설문시작 버튼 활성화
-				btn_survey.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						Intent intent = new Intent(SurveyViewActivity.this,
-								FillOutSurveyActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.putExtra("survey", mSurvey); // 새로운 액티비티에
-															// 데이터를 넘겨준다
-						startActivity(intent); // 새로운 액티비티 실행~~
-						overridePendingTransition(R.anim.left_in,
-								R.anim.splashfadeout);
-					}
-				});
-			}
+			break;
 		}
 
 		// 학과명 및 교수님 이름 출력
@@ -196,6 +109,116 @@ public class SurveyViewActivity extends Activity {
 
 		// 설문 메세지
 		tvSurveyMsg.setText(survey.getMsg());
+
+		// 교수님일 경우 설문지의 질문들을 관리하는 액티비티로 이동 가능,
+		// 교수님일 경우 설문을 시작으로 변경해야함. -> 설문시작 이미지 추가
+		if (LSApplication.gUser.getUsertype() > 0
+				&& mSurvey.getUid() == LSApplication.gUser.getUid()) {
+			setViewProfessor();
+
+		} else {
+			setViewStudent();
+		}
+
+	}
+
+	private void setViewProfessor() {
+		findViewById(R.id.survey_view_layoutStudent).setVisibility(View.GONE);
+		findViewById(R.id.survey_view_layoutProf).setVisibility(View.VISIBLE);
+
+		findViewById(R.id.survey_view_btn_manage_survey_items)
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(SurveyViewActivity.this,
+								ManageSurveyItemsActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
+															// 넘겨준다
+						startActivity(intent); // 새로운 액티비티 실행~~
+						overridePendingTransition(R.anim.left_in,
+								R.anim.splashfadeout);
+					}
+				});
+
+		findViewById(R.id.survey_view_btn_delete_survey_items)
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						confirmDialog(mContext,
+								R.string.alert_msg_survey_delete_confirm,
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method
+										// stub
+										Log.i(getClass().getSimpleName(),
+												"Delete Survey / idx :"
+														+ mSurvey.getIdx());
+										showLoadingLayer(true);										
+										new RequestSurveyDelete()
+												.execute(mSurvey.getIdx());
+									}
+								});
+
+					}
+				});
+
+		// 설문시작 or 종료
+		findViewById(R.id.survey_view_btn_survey_start).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						changeSurveyStatus();
+					}
+				});
+	}
+
+	private void setViewStudent() {
+		findViewById(R.id.survey_view_layoutStudent)
+				.setVisibility(View.VISIBLE);
+		findViewById(R.id.survey_view_layoutProf).setVisibility(View.GONE);
+
+		// 학생
+		if (mSurvey.getStatus() == 0 && mSurvey.getStatus() == 2) {
+			// 설문대기중
+			// 설문시작 버튼 숨김 및 Alert 메세지 visible
+			btn_survey.setVisibility(View.GONE);
+
+			TextView tvAlertMsg = (TextView) findViewById(R.id.survey_view_tvSurveyAlertMsg);
+			tvAlertMsg.setVisibility(View.VISIBLE);
+
+			if (mSurvey.getStatus() == 0)
+				tvAlertMsg.setText(R.string.alert_msg_survey_ready);
+			if (mSurvey.getStatus() == 2)
+				tvAlertMsg.setText(R.string.alert_msg_survey_ended);
+
+		} else {
+			// 설문 시작중.. 설문시작 버튼 활성화
+			btn_survey.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(SurveyViewActivity.this,
+							FillOutSurveyActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.putExtra("survey", mSurvey); // 새로운 액티비티에
+														// 데이터를 넘겨준다
+					startActivity(intent); // 새로운 액티비티 실행~~
+					overridePendingTransition(R.anim.left_in,
+							R.anim.splashfadeout);
+				}
+			});
+		}
 	}
 
 	private class RequestSurveyDelete extends AsyncTask<Integer, Void, Boolean> {
@@ -220,7 +243,7 @@ public class SurveyViewActivity extends Activity {
 		}
 	}
 
-	public boolean RequestSurveyDelete(int surveyIdx) {
+	private boolean RequestSurveyDelete(int surveyIdx) {
 		JsonElement json = IPC.getInstance().requestSurveyDelete(
 				LSApplication.gRequestHeader, surveyIdx);
 		if (json != null) {
@@ -229,7 +252,74 @@ public class SurveyViewActivity extends Activity {
 		return false;
 	}
 
-	public void ErrorPopUp() {
+	// 설문 상태 변경
+	private void changeSurveyStatus() {
+		if (mSurvey.getStatus() == 0) {
+			// 설문시작으로 변경
+			confirmDialog(mContext, R.string.alert_msg_survey_start_confirm,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method
+
+							Log.i(getClass().getSimpleName(),
+									"Update Survey status / idx :"
+											+ mSurvey.getIdx() + " status : 1");
+							showLoadingLayer(true);										
+							
+							new RequestSurveyPutStatus().execute(mSurvey.getIdx(), 1);
+						}
+					});
+		} else if (mSurvey.getStatus() == 1) {
+			// /설문 종료로 변경
+			confirmDialog(mContext, R.string.alert_msg_survey_end_confirm,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method
+
+							Log.i(getClass().getSimpleName(),
+									"Update Survey status / idx :"
+											+ mSurvey.getIdx() + " status : 2");
+							showLoadingLayer(true);										
+							
+							new RequestSurveyPutStatus().execute(mSurvey.getIdx(), 2);
+						}
+					});
+		}
+	}
+
+	private class RequestSurveyPutStatus extends
+			AsyncTask<Integer, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Integer... params) {
+			JsonElement json = IPC.getInstance().requestSurveyStatusUpdate(
+					LSApplication.gRequestHeader, params[0], params[1]);
+			if (json != null) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+
+			showLoadingLayer(false);
+
+			if (result) {
+				setResult(Activity.RESULT_OK);
+				finish();
+			} else {
+				ErrorPopUp();
+			}
+		}
+	}
+
+	private void ErrorPopUp() {
 		LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, IPC
 				.getInstance().getLastResponseErrorMsg(), null);
 	}
@@ -244,14 +334,15 @@ public class SurveyViewActivity extends Activity {
 		}
 	}
 
-	public void alertDialog(Context context, int messageRedId,
+	private void confirmDialog(Context context, int messageRedId,
 			DialogInterface.OnClickListener listener) {
 		AlertDialog.Builder ad = new AlertDialog.Builder(context);
 		ad.setTitle(R.string.popup_alert_title_info);
 		ad.setMessage(messageRedId);
 		ad.setPositiveButton(context.getResources().getString(R.string.yes),
-				listener).setNegativeButton(
-				context.getResources().getString(R.string.no), listener);
+				listener);
+		ad.setNegativeButton(context.getResources().getString(R.string.no),
+				null);
 		ad.show();
 	}
 

@@ -58,7 +58,10 @@ public class SurveyAdapter extends BaseAdapter {
 				.findViewById(R.id.survey_list_row_ivStatus);
 		
 		//설문중일때 아이콘
-		if(listarray.get(position).getStatus() < 2) {
+		if(listarray.get(position).getStatus() == 0) {
+			icStatus.setImageResource(R.drawable.ic_question);
+		}
+		else if(listarray.get(position).getStatus() == 1) {
 			icStatus.setImageResource(R.drawable.ic_alert);
 		}
 		else {
