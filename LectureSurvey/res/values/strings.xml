@@ -21,6 +21,8 @@
     <string name="question">질문</string>
     <string name="delete">삭제</string>
     <string name="menu">메뉴</string>
+    <string name="result">결과</string>
+    <string name="survey_result">설문결과</string>
     
     
     <string name="yes">예</string>

@@ -180,6 +180,23 @@ public class SurveyViewActivity extends Activity {
 						changeSurveyStatus();
 					}
 				});
+		
+		findViewById(R.id.survey_view_btn_survey_result)
+		.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(SurveyViewActivity.this,
+						SurveyItemsResultActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
+													// 넘겨준다
+				startActivity(intent); // 새로운 액티비티 실행~~
+				overridePendingTransition(R.anim.left_in,
+						R.anim.splashfadeout);
+			}
+		});		
 	}
 
 	private void setViewStudent() {

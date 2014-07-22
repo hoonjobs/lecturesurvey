@@ -315,7 +315,7 @@ public class IPC {
 
 	public JsonElement requestSurveyResult(IPCHeader header, int surveyId) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
-		String url = path.append("survey/item/list/get.php").toString();
+		String url = path.append("survey/result/get.php").toString();
 		Log.i("IPC_Request", url);
 
 		String rstJSON = "";

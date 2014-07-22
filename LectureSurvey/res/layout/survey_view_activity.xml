@@ -149,6 +149,22 @@
                             android:textColorHighlight="#ffffff"
                             android:textSize="24sp" />
 
+                        <Button
+                            android:id="@+id/survey_view_btn_survey_result"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/btn_common"
+                            android:scaleType="centerInside"
+                            android:shadowColor="@color/chocolate"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="@string/survey_result"
+                            android:textColor="#ffff"
+                            android:textColorHighlight="#ffffff"
+                            android:textSize="24sp" />
+
                         <kr.ac.dsc.lecturesurvey.ImageBtn
                             android:id="@+id/survey_view_btn_delete_survey_items"
                             android:layout_width="wrap_content"
