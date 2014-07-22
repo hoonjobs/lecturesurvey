@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.google.gson.JsonElement;
-
 import kr.ac.dsc.lecturesurvey.ipc.IPC;
 import kr.ac.dsc.lecturesurvey.model.Survey;
 import android.app.Activity;
@@ -20,9 +18,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.gson.JsonElement;
 
 public class SurveyViewActivity extends Activity {
 
@@ -40,6 +41,8 @@ public class SurveyViewActivity extends Activity {
 	private TextView tvSurveyMsg;
 
 	private ImageBtn btn_survey;
+
+	private Button btnSurveyStatus; // 설문 시작 or 종료 버튼
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,8 @@ public class SurveyViewActivity extends Activity {
 		// 교수님일 경우 설문지의 질문들을 관리하는 액티비티로 이동 가능,
 		// 교수님일 경우 설문을 시작으로 변경해야함. -> 설문시작 이미지 추가
 		if (LSApplication.gUser.getUsertype() > 0
-				&& mSurvey.getUid() == LSApplication.gUser.getUid()) {
+		// && mSurvey.getUid() == LSApplication.gUser.getUid()
+		) {
 			setViewProfessor();
 
 		} else {
@@ -126,6 +130,7 @@ public class SurveyViewActivity extends Activity {
 		findViewById(R.id.survey_view_layoutStudent).setVisibility(View.GONE);
 		findViewById(R.id.survey_view_layoutProf).setVisibility(View.VISIBLE);
 
+		// //////////////////////////////////////////////////////////////////////////////
 		findViewById(R.id.survey_view_btn_manage_survey_items)
 				.setOnClickListener(new OnClickListener() {
 
@@ -143,6 +148,70 @@ public class SurveyViewActivity extends Activity {
 					}
 				});
 
+		// //////////////////////////////////////////////////////////////////////////////
+		// 설문시작 or 종료
+		btnSurveyStatus = (Button) findViewById(R.id.survey_view_btn_survey_start);
+
+		if (mSurvey.getStatus() == 0) {
+			btnSurveyStatus.setText(R.string.survey_start);
+			btnSurveyStatus.setBackgroundResource(R.drawable.btn_blue);
+		} else if (mSurvey.getStatus() == 1) {
+			btnSurveyStatus.setText(R.string.survey_end);
+			btnSurveyStatus.setBackgroundResource(R.drawable.btn_pink);
+		} else if (mSurvey.getStatus() == 2) {
+			btnSurveyStatus.setText(R.string.survey_start);
+			btnSurveyStatus.setBackgroundResource(R.drawable.btn_blue);
+		}
+
+		btnSurveyStatus.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				changeSurveyStatus();
+			}
+		});
+		
+		// //////////////////////////////////////////////////////////////////////////////
+		// 설문 결과
+		findViewById(R.id.survey_view_btn_survey_result).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(SurveyViewActivity.this,
+								SurveyItemResultActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
+															// 넘겨준다
+						startActivity(intent); // 새로운 액티비티 실행~~
+						overridePendingTransition(R.anim.left_in,
+								R.anim.splashfadeout);
+					}
+				});
+
+		// //////////////////////////////////////////////////////////////////////////////
+		// 설문 참여자
+		findViewById(R.id.survey_view_btn_survey_result_respondents)
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(SurveyViewActivity.this,
+								SurveyRespondentsActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
+															// 넘겨준다
+						startActivity(intent); // 새로운 액티비티 실행~~
+						overridePendingTransition(R.anim.left_in,
+								R.anim.splashfadeout);
+					}
+				});
+		
+		// //////////////////////////////////////////////////////////////////////////////
+		// 설문지 삭제
 		findViewById(R.id.survey_view_btn_delete_survey_items)
 				.setOnClickListener(new OnClickListener() {
 
@@ -161,7 +230,7 @@ public class SurveyViewActivity extends Activity {
 										Log.i(getClass().getSimpleName(),
 												"Delete Survey / idx :"
 														+ mSurvey.getIdx());
-										showLoadingLayer(true);										
+										showLoadingLayer(true);
 										new RequestSurveyDelete()
 												.execute(mSurvey.getIdx());
 									}
@@ -170,33 +239,7 @@ public class SurveyViewActivity extends Activity {
 					}
 				});
 
-		// 설문시작 or 종료
-		findViewById(R.id.survey_view_btn_survey_start).setOnClickListener(
-				new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						changeSurveyStatus();
-					}
-				});
 		
-		findViewById(R.id.survey_view_btn_survey_result)
-		.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(SurveyViewActivity.this,
-						SurveyItemsResultActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
-													// 넘겨준다
-				startActivity(intent); // 새로운 액티비티 실행~~
-				overridePendingTransition(R.anim.left_in,
-						R.anim.splashfadeout);
-			}
-		});		
 	}
 
 	private void setViewStudent() {
@@ -271,7 +314,7 @@ public class SurveyViewActivity extends Activity {
 
 	// 설문 상태 변경
 	private void changeSurveyStatus() {
-		if (mSurvey.getStatus() == 0) {
+		if (mSurvey.getStatus() == 0 || mSurvey.getStatus() == 2) {
 			// 설문시작으로 변경
 			confirmDialog(mContext, R.string.alert_msg_survey_start_confirm,
 					new DialogInterface.OnClickListener() {
@@ -283,9 +326,10 @@ public class SurveyViewActivity extends Activity {
 							Log.i(getClass().getSimpleName(),
 									"Update Survey status / idx :"
 											+ mSurvey.getIdx() + " status : 1");
-							showLoadingLayer(true);										
-							
-							new RequestSurveyPutStatus().execute(mSurvey.getIdx(), 1);
+							showLoadingLayer(true);
+
+							new RequestSurveyPutStatus().execute(
+									mSurvey.getIdx(), 1);
 						}
 					});
 		} else if (mSurvey.getStatus() == 1) {
@@ -300,9 +344,10 @@ public class SurveyViewActivity extends Activity {
 							Log.i(getClass().getSimpleName(),
 									"Update Survey status / idx :"
 											+ mSurvey.getIdx() + " status : 2");
-							showLoadingLayer(true);										
-							
-							new RequestSurveyPutStatus().execute(mSurvey.getIdx(), 2);
+							showLoadingLayer(true);
+
+							new RequestSurveyPutStatus().execute(
+									mSurvey.getIdx(), 2);
 						}
 					});
 		}

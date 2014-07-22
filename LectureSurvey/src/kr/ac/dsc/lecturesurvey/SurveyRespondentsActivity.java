@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import kr.ac.dsc.lecturesurvey.ipc.IPC;
 import kr.ac.dsc.lecturesurvey.model.Survey;
-import kr.ac.dsc.lecturesurvey.model.SurveyItem;
+import kr.ac.dsc.lecturesurvey.model.Respondent;
+import kr.ac.dsc.lecturesurvey.model.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,14 +22,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public class SurveyItemsResultActivity extends Activity {
-
+public class SurveyRespondentsActivity extends Activity {
 	private PullToRefreshListView mPullRefreshListView;	
 	private ListView mActualListView;
 	
 	private Survey mSurvey;
-	private ArrayList<SurveyItem> arrSurvey;
-	private SurveyItemResultAdapter adapterSurvey;	
+	private ArrayList<Respondent> arrSurvey;
+	private SurveyRespondentsAdapter adapterSurvey;
 
 	public boolean bRefresh = false;
 	
@@ -69,8 +69,8 @@ public class SurveyItemsResultActivity extends Activity {
 		
 		mActualListView = mPullRefreshListView.getRefreshableView();
 
-		arrSurvey = new ArrayList<SurveyItem>();
-		adapterSurvey = new SurveyItemResultAdapter(this, arrSurvey);
+		arrSurvey = new ArrayList<Respondent>();
+		adapterSurvey = new SurveyRespondentsAdapter(this, arrSurvey);
 
 		new GetDataTask().execute();
 		
@@ -78,15 +78,15 @@ public class SurveyItemsResultActivity extends Activity {
 		
 	}
 	
-	private class GetDataTask extends AsyncTask<Void, Void, ArrayList<SurveyItem>> {
+	private class GetDataTask extends AsyncTask<Void, Void, ArrayList<Respondent>> {
 
 		@Override
-		protected ArrayList<SurveyItem> doInBackground(Void... params) {
-			return RequestSurveyItemList();
+		protected ArrayList<Respondent> doInBackground(Void... params) {
+			return RequestRespondentList();
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<SurveyItem> arrNewSurveys) {
+		protected void onPostExecute(ArrayList<Respondent> arrNewSurveys) {
 			
 			ResetList();
 			 
@@ -101,12 +101,12 @@ public class SurveyItemsResultActivity extends Activity {
 		}
 	}
 	
-	private ArrayList<SurveyItem> RequestSurveyItemList() {
-		JsonElement json = IPC.getInstance().requestSurveyResult(LSApplication.gRequestHeader, mSurvey.getIdx()); 
-		return ResponseSurveyItemResult(json);
+	private ArrayList<Respondent> RequestRespondentList() {
+		JsonElement json = IPC.getInstance().requestSurveyRespondents(LSApplication.gRequestHeader, mSurvey.getIdx()); 
+		return ResponseRespondentResult(json);
 	}
 
-	private ArrayList<SurveyItem> ResponseSurveyItemResult(JsonElement json) {
+	private ArrayList<Respondent> ResponseRespondentResult(JsonElement json) {
 		
 		if(json == null) return null;
 		
@@ -117,8 +117,8 @@ public class SurveyItemsResultActivity extends Activity {
 		   
 		    JsonArray Items = body.getAsJsonArray("items");
 
-		    ArrayList<SurveyItem> arrNewSurveys;
-		    arrNewSurveys = IPC.getInstance().getGson().fromJson(Items, new TypeToken<ArrayList<SurveyItem>>(){}.getType());
+		    ArrayList<Respondent> arrNewSurveys;
+		    arrNewSurveys = IPC.getInstance().getGson().fromJson(Items, new TypeToken<ArrayList<Respondent>>(){}.getType());
 		    return arrNewSurveys;
 		}
 		return null;
@@ -135,5 +135,4 @@ public class SurveyItemsResultActivity extends Activity {
 		super.finish();
 		overridePendingTransition( R.anim.splashfadein, R.anim.right_out);
 	}
-
 }
