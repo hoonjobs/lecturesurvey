@@ -311,7 +311,19 @@ public class IPC {
 		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 
 		return RequestJSON(url, rstJSON);
-		
 	}
 
+	public JsonElement requestSurveyResult(IPCHeader header, int surveyId) {
+		StringBuffer path = new StringBuffer(ServerBaseUrl);
+		String url = path.append("survey/item/list/get.php").toString();
+		Log.i("IPC_Request", url);
+
+		String rstJSON = "";
+		String JSON_Header = header.getHeaderJSON();
+		String JSON_Body = "\"body\":{ " + "\"surveyIdx\":" + surveyId + "}";
+
+		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+
+		return RequestJSON(url, rstJSON);
+	}	
 }

@@ -188,7 +188,7 @@ public class SurveyViewActivity extends Activity {
 		findViewById(R.id.survey_view_layoutProf).setVisibility(View.GONE);
 
 		// 학생
-		if (mSurvey.getStatus() == 0 && mSurvey.getStatus() == 2) {
+		if (mSurvey.getStatus() == 0 || mSurvey.getStatus() == 2) {
 			// 설문대기중
 			// 설문시작 버튼 숨김 및 Alert 메세지 visible
 			btn_survey.setVisibility(View.GONE);
@@ -198,7 +198,7 @@ public class SurveyViewActivity extends Activity {
 
 			if (mSurvey.getStatus() == 0)
 				tvAlertMsg.setText(R.string.alert_msg_survey_ready);
-			if (mSurvey.getStatus() == 2)
+			else if (mSurvey.getStatus() == 2)
 				tvAlertMsg.setText(R.string.alert_msg_survey_ended);
 
 		} else {

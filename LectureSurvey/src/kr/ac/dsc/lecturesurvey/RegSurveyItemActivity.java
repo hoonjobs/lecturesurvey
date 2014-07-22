@@ -53,7 +53,10 @@ public class RegSurveyItemActivity extends Activity {
 		
 		mSurveyItem = ((SurveyItem) intent.getSerializableExtra("surveyItem"));
 		if(mSurveyItem != null) updateMode = true;
-		else updateMode = false;
+		else {
+			updateMode = false;
+			mSurveyItem = new SurveyItem(0, 0, "");
+		}
 		
         SpinnerLayout = (FrameLayout) findViewById(R.id.spinnerLayout);
         IvSpinner = (ImageView) findViewById(R.id.spinner_image);
