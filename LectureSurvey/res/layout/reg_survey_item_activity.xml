@@ -43,19 +43,27 @@
                     android:minHeight="100dp"
                     android:textSize="12sp" />
 
-                <kr.ac.dsc.lecturesurvey.ImageBtn
+                <Button
                     android:id="@+id/reg_survey_item_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp"
-                    android:src="@drawable/btn_reg_survey" />
+                    android:background="@drawable/btn_blue"
+                    android:scaleType="centerInside"
+                    android:shadowColor="@color/chocolate"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1"
+                    android:text="@string/reg_question"
+                    android:textColor="#ffff"
+                    android:textSize="24sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/spinner_layout" />
+
 </FrameLayout>

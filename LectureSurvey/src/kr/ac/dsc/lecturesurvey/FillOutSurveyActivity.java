@@ -259,14 +259,14 @@ public class FillOutSurveyActivity extends Activity {
 	}
 
 	public void exitPopup() {
-		new AlertDialog.Builder(this).setTitle("설문 종료")
-				.setMessage("설문을 종료 하시겠습니까?")
-				.setPositiveButton("예", new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle(R.string.survey_end)
+				.setMessage(R.string.alert_msg_survey_end_confirm)
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						finish();
 					}
-				}).setNegativeButton("아니오", null).show();
+				}).setNegativeButton(R.string.no, null).show();
 	}
 }

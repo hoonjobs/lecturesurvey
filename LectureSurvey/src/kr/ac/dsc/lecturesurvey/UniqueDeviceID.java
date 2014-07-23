@@ -2,7 +2,9 @@ package kr.ac.dsc.lecturesurvey;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -10,8 +12,10 @@ import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 
+@SuppressLint("DefaultLocale")
 public class UniqueDeviceID {
 	
+	@SuppressLint("DefaultLocale")
 	public static String getUniqueDeviceID(Context context)
 	{
 		//1. The IMEI: only for Android devices with Phone use:
@@ -97,7 +101,7 @@ public class UniqueDeviceID {
     		m_szUniqueID+=Integer.toHexString(b);
     	}
     	// hex string to uppercase
-    	m_szUniqueID = m_szUniqueID.toUpperCase();
+    	m_szUniqueID = m_szUniqueID.toUpperCase(Locale.getDefault());
 		 
 
 //		The result has 32 hex digits and it looks like this:

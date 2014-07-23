@@ -140,9 +140,8 @@ public class SurveyViewActivity extends Activity {
 						Intent intent = new Intent(SurveyViewActivity.this,
 								ManageSurveyItemsActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
-															// 넘겨준다
-						startActivity(intent); // 새로운 액티비티 실행~~
+						intent.putExtra("survey", mSurvey);
+						startActivity(intent);
 						overridePendingTransition(R.anim.left_in,
 								R.anim.splashfadeout);
 					}
@@ -183,9 +182,8 @@ public class SurveyViewActivity extends Activity {
 						Intent intent = new Intent(SurveyViewActivity.this,
 								SurveyItemResultActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
-															// 넘겨준다
-						startActivity(intent); // 새로운 액티비티 실행~~
+						intent.putExtra("survey", mSurvey);
+						startActivity(intent);
 						overridePendingTransition(R.anim.left_in,
 								R.anim.splashfadeout);
 					}
@@ -202,9 +200,8 @@ public class SurveyViewActivity extends Activity {
 						Intent intent = new Intent(SurveyViewActivity.this,
 								SurveyRespondentsActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.putExtra("survey", mSurvey); // 새로운 액티비티에 데이터를
-															// 넘겨준다
-						startActivity(intent); // 새로운 액티비티 실행~~
+						intent.putExtra("survey", mSurvey);
+						startActivity(intent);
 						overridePendingTransition(R.anim.left_in,
 								R.anim.splashfadeout);
 					}
@@ -235,7 +232,6 @@ public class SurveyViewActivity extends Activity {
 												.execute(mSurvey.getIdx());
 									}
 								});
-
 					}
 				});
 
@@ -271,9 +267,8 @@ public class SurveyViewActivity extends Activity {
 					Intent intent = new Intent(SurveyViewActivity.this,
 							FillOutSurveyActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.putExtra("survey", mSurvey); // 새로운 액티비티에
-														// 데이터를 넘겨준다
-					startActivity(intent); // 새로운 액티비티 실행~~
+					intent.putExtra("survey", mSurvey);
+					startActivity(intent);
 					overridePendingTransition(R.anim.left_in,
 							R.anim.splashfadeout);
 				}

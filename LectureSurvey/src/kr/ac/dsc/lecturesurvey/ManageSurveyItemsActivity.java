@@ -67,8 +67,8 @@ public class ManageSurveyItemsActivity extends Activity {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(ManageSurveyItemsActivity.this, RegSurveyItemActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.putExtra("survey", mSurvey); //새로운 액티비티에 데이터를 넘겨준다
-					startActivityForResult(intent, 0); //새로운 액티비티 실행~~
+					intent.putExtra("survey", mSurvey);
+					startActivityForResult(intent, 0); 
 					overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
 				}
 			});
@@ -111,9 +111,9 @@ public class ManageSurveyItemsActivity extends Activity {
 				SurveyItem item = (SurveyItem) listView.getItemAtPosition(position);
 				Intent intent = new Intent(ManageSurveyItemsActivity.this, RegSurveyItemActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.putExtra("survey", mSurvey); //새로운 액티비티에 데이터를 넘겨준다
-				intent.putExtra("surveyItem", item); //새로운 액티비티에 데이터를 넘겨준다
-				startActivityForResult(intent, 0); //새로운 액티비티 실행~~
+				intent.putExtra("survey", mSurvey);
+				intent.putExtra("surveyItem", item);
+				startActivityForResult(intent, 0);
 				overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
             }
         });
@@ -132,7 +132,6 @@ public class ManageSurveyItemsActivity extends Activity {
 			}
 		});
 	}
-	
 	
 	//메뉴에서 아이템 선택시
 	@Override
@@ -180,11 +179,6 @@ public class ManageSurveyItemsActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(ArrayList<SurveyItem> arrNewSurveys) {
-			//if(!result) return;
-			
-//			mPullRefreshListView.setVisibility(View.VISIBLE);
-//			ListView actualListView = mPullRefreshListView.getRefreshableView();
-//			actualListView.setVisibility(View.VISIBLE);			
 			
 			ResetList();
 			 
@@ -202,10 +196,6 @@ public class ManageSurveyItemsActivity extends Activity {
 	private ArrayList<SurveyItem> RequestSurveyItemList() {
 		JsonElement json = IPC.getInstance().requestSurveyItemList(LSApplication.gRequestHeader, mSurvey.getIdx()); 
 		return ResponseSurveyItemList(json);
-//		{
-//			return true;
-//		}
-//		return false;
 	}
 
 	private ArrayList<SurveyItem> ResponseSurveyItemList(JsonElement json) {
@@ -222,14 +212,6 @@ public class ManageSurveyItemsActivity extends Activity {
 		    ArrayList<SurveyItem> arrNewSurveys;
 		    arrNewSurveys = IPC.getInstance().getGson().fromJson(Items, new TypeToken<ArrayList<SurveyItem>>(){}.getType());
 		    return arrNewSurveys;
-		    
-//		    if(bRefresh) {
-//		    	ResetList();
-//		    }
-//		    
-//		    arrSurvey.addAll(arrNewSurveys);
-		    
-		    //return true;
 		}
 		return null;
 	}

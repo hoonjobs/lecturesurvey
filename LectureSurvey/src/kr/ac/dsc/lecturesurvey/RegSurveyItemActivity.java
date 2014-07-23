@@ -16,6 +16,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -65,7 +66,7 @@ public class RegSurveyItemActivity extends Activity {
 		
 		showLoadingLayer(false);
 		
-		ImageBtn btn_postSurvey = (ImageBtn)findViewById(R.id.reg_survey_item_post);
+		Button btn_postSurvey = (Button)findViewById(R.id.reg_survey_item_post);
 		btn_postSurvey.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -86,7 +87,7 @@ public class RegSurveyItemActivity extends Activity {
 
 		String surveyItemQuestion = etQuestion.getText().toString();
 		
-		if(surveyItemQuestion.length() < 1)
+		if(!validStringContentsLength(surveyItemQuestion))
 		{				
 			LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, R.string.error_msg_question, new DialogInterface.OnClickListener() {
 	        	public void onClick(DialogInterface dialog, int which) {
