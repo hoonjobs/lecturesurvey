@@ -77,7 +77,11 @@ public class InitActivity extends Activity {
 						.getBackground();
 				frameAnimation.start();
 
-				new GetDataTask().execute();
+				if(LSApplication.gRequestHeader.getAccess_token().length() < 3) {
+					startGuestLoginActivity();
+				} else {
+					new GetDataTask().execute();
+				}
 			}
 		}, 1000); // 1000ms 후 실행된다.
 
@@ -163,6 +167,17 @@ public class InitActivity extends Activity {
 		return false;
 	}
 
+	private void startGuestLoginActivity() {
+		// 로그인 실패
+		// go to 로그인&회원가입
+		Intent intent = new Intent(mContext,
+				GuestLoginActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent); // 새로운 액티비티 실행~~
+		overridePendingTransition(R.anim.alpha2000,
+				R.anim.fadeout);		
+	}
+	
 	public void ErrorPopUp() {
 		LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, IPC
 				.getInstance().getLastResponseErrorMsg(),
@@ -171,14 +186,7 @@ public class InitActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						// TODO Auto-generated method stub
-						// 로그인 실패
-						// go to 로그인&회원가입
-						Intent intent = new Intent(mContext,
-								GuestLoginActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(intent); // 새로운 액티비티 실행~~
-						overridePendingTransition(R.anim.alpha2000,
-								R.anim.fadeout);
+						startGuestLoginActivity();						
 					}
 				});
 	}
