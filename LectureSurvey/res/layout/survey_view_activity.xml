@@ -123,14 +123,31 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:orientation="vertical" >
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/dot_line_repeat"
+                            android:orientation="vertical" >
+                        </LinearLayout>                        
 
-                        <kr.ac.dsc.lecturesurvey.ImageBtn
+                        <Button
                             android:id="@+id/survey_view_btn_manage_survey_items"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/btn_manage_survey_items" />
+                            android:layout_margin="5dp"
+                            android:background="@drawable/btn_blue"
+                            android:scaleType="centerInside"
+                            android:shadowColor="@color/chocolate"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="@string/manage_question"
+                            android:textColor="#ffff"
+                            android:textSize="24sp" />
 
                         <Button
                             android:id="@+id/survey_view_btn_survey_start"
@@ -148,10 +165,20 @@
                             android:textColor="#ffff"
                             android:textSize="24sp" />
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/dot_line_repeat"
+                            android:orientation="vertical" >
+                        </LinearLayout>
+
                         <Button
                             android:id="@+id/survey_view_btn_survey_result"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="right"
                             android:layout_margin="5dp"
                             android:background="@drawable/btn_blue"
                             android:scaleType="centerInside"
@@ -162,11 +189,12 @@
                             android:text="@string/survey_result"
                             android:textColor="#ffff"
                             android:textSize="24sp" />
-                        
+
                         <Button
                             android:id="@+id/survey_view_btn_survey_result_respondents"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="right"
                             android:layout_margin="5dp"
                             android:background="@drawable/btn_blue"
                             android:scaleType="centerInside"
@@ -176,15 +204,23 @@
                             android:shadowRadius="1"
                             android:text="@string/survey_respondents"
                             android:textColor="#ffff"
-                            android:textSize="24sp" />                        
+                            android:textSize="24sp" />
 
-                        <kr.ac.dsc.lecturesurvey.ImageBtn
+                        <Button
                             android:id="@+id/survey_view_btn_delete_survey_items"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/btn_delete_survey" />
+                            android:layout_margin="5dp"
+                            android:background="@drawable/btn_pink"
+                            android:scaleType="centerInside"
+                            android:shadowColor="@color/chocolate"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="@string/survey_delete"
+                            android:textColor="#ffff"
+                            android:textSize="24sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

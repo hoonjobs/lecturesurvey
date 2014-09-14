@@ -34,6 +34,7 @@ public class RegSurveyItemActivity extends Activity {
 	private EditText etQuestion;
 	
 	private boolean updateMode;
+	private boolean deleteMode;
 	
 	Context mContext;
 	
@@ -76,6 +77,18 @@ public class RegSurveyItemActivity extends Activity {
 			}
 		});
 		
+		Button btn_deleteSurvey = (Button)findViewById(R.id.reg_survey_item_delete);
+		btn_deleteSurvey.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				doDeleteSurveyItem();
+			}
+		});
+		
+		deleteMode = false;
+		
 		etQuestion = (EditText) findViewById(R.id.reg_survey_item_etQuestion);
 		
 		if(mSurveyItem != null) etQuestion.setText(mSurveyItem.getQuestion());
@@ -105,11 +118,26 @@ public class RegSurveyItemActivity extends Activity {
 		new GetDataTask().execute(surveyItem);
 	}
 	
+	public void doDeleteSurveyItem()
+	{
+		Log.i(getClass().getSimpleName(), "doDeleteSurveyItem");
+
+		deleteMode = true;
+		
+		showLoadingLayer(true);
+
+		SurveyItem surveyItem = new SurveyItem(mSurveyItem.getIdx(), mSurvey.getIdx(), "");
+		
+		new GetDataTask().execute(surveyItem);
+	}
+		
 	private class GetDataTask extends AsyncTask<SurveyItem, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(SurveyItem... params) {
-			if(updateMode)
+			if(deleteMode) 
+				return RequestDelete(params[0]);
+			else if(updateMode)
 				return RequestPut(params[0]);
 			else 
 				return RequestPost(params[0]);
@@ -152,6 +180,15 @@ public class RegSurveyItemActivity extends Activity {
 	//수정
 	private boolean RequestPut(SurveyItem surveyItem) {
 		JsonElement responseJson = IPC.getInstance().requestSurveyItemPut(LSApplication.gRequestHeader, surveyItem); 
+		if(ResponseSurveyItemPost(responseJson)) {
+			return true;
+		}
+		return false;
+	}
+	
+	//삭제
+	private boolean RequestDelete(SurveyItem surveyItem) {
+		JsonElement responseJson = IPC.getInstance().requestSurveyItemDelete(LSApplication.gRequestHeader, surveyItem.getSurveyIdx(), surveyItem.getIdx()); 
 		if(ResponseSurveyItemPost(responseJson)) {
 			return true;
 		}

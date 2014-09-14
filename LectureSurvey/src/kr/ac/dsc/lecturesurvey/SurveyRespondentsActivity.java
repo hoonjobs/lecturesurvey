@@ -37,7 +37,7 @@ public class SurveyRespondentsActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.manage_survey_items_activity);
+		setContentView(R.layout.basic_listview_activity);
 		
 		// get Survey Data ////////////
 		Intent intent = getIntent();

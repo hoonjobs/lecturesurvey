@@ -36,6 +36,7 @@
     <string name="studentID">학번</string>
     <string name="email">이메일</string>
     <string name="password">패스워드</string>
+    <string name="bun">번</string>
     
     
     <string name="alert_msg_lecture_date">강의일을 선택해주세요.</string>

@@ -53,7 +53,7 @@ public class SurveyItemResultAdapter extends BaseAdapter {
 
 		TextView idx = (TextView) convertView
 		.findViewById(R.id.survey_item_list_row_idx);
-		idx.setText((position+1) + "번");
+		idx.setText(Integer.toString(position+1));
 		
 		TextView question = (TextView) convertView
 		.findViewById(R.id.survey_item_list_row_question);
