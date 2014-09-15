@@ -1,8 +1,8 @@
 package kr.ac.dsc.lecturesurvey;
 
 import kr.ac.dsc.lecturesurvey.ipc.IPCHeader;
+import kr.ac.dsc.lecturesurvey.ipc.VolleyClient;
 import kr.ac.dsc.lecturesurvey.model.User;
-
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
@@ -40,6 +40,8 @@ public class LSApplication extends Application {
 		
 		Log.i("access_token", gRequestHeader.getAccess_token());
 		Log.i("DeviceID", gRequestHeader.getDeviceID());
+		
+		VolleyClient.init(this);		
 		
 	}
 	

@@ -1,7 +1,9 @@
 package kr.ac.dsc.lecturesurvey.ipc;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import kr.ac.dsc.lecturesurvey.model.Survey;
@@ -9,6 +11,8 @@ import kr.ac.dsc.lecturesurvey.model.SurveyItem;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
@@ -234,7 +238,7 @@ public class IPC {
 
 		return RequestJSON(url, rstJSON);
 	}
-	
+
 	public JsonElement requestSurveyItemList(IPCHeader header, int surveyId) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
 		String url = path.append("survey/item/list/get.php").toString();
@@ -248,65 +252,130 @@ public class IPC {
 
 		return RequestJSON(url, rstJSON);
 	}
-	
-	public JsonElement requestSurveyItemPost(IPCHeader header, SurveyItem surveyItem) {
+
+	public JsonElement requestSurveyItemPost(IPCHeader header,
+			SurveyItem surveyItem) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
-		String url = path.append("survey/item/post.php").toString();
+		String url = path.append("survey/item/post2.php").toString();
 		Log.i("IPC_Request", url);
 
-		String rstJSON = "";
-		String JSON_Header = header.getHeaderJSON();
-		String JsonSurvey = gson.toJson(surveyItem);
-		String JSON_Body = "\"body\": " + JsonSurvey;
+		MultipartEntity postParameters = new MultipartEntity();
 
-		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+		try {
+			// URLEncoder.encode 는 get 방식일떄만!
+			postParameters.addPart(
+					"device_id",
+					new StringBody(header.getDeviceID(), Charset
+							.forName("UTF-8")));
+			postParameters.addPart(
+					"access_token",
+					new StringBody(header.getAccess_token(), Charset
+							.forName("UTF-8")));
+			postParameters.addPart("surveyIdx", new StringBody(surveyItem.getSurveyIdx()
+					+ "", Charset.forName("UTF-8")));
+			postParameters.addPart(
+					"question",
+					new StringBody(surveyItem.getQuestion(), Charset
+							.forName("UTF-8")));
 
-		return RequestJSON(url, rstJSON);
+			if(surveyItem.getImageUrl() != null) {
+				FileBody bin = new FileBody(new File(surveyItem.getImageUrl()));
+				postParameters.addPart("img", bin);
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return RequestPostMultipart(url, postParameters);
+		
+//		String rstJSON = "";
+//		String JSON_Header = header.getHeaderJSON();
+//		String JsonSurvey = gson.toJson(surveyItem);
+//		String JSON_Body = "\"body\": " + JsonSurvey;
+//
+//		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+//
+//		return RequestJSON(url, rstJSON);
 	}
-	
-	public JsonElement requestSurveyItemPut(IPCHeader header, SurveyItem surveyItem) {
+
+	public JsonElement requestSurveyItemPut(IPCHeader header,
+			SurveyItem surveyItem) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
-		String url = path.append("survey/item/put.php").toString();
+		String url = path.append("survey/item/put2.php").toString();
 		Log.i("IPC_Request", url);
 
-		String rstJSON = "";
-		String JSON_Header = header.getHeaderJSON();
-		String JsonSurvey = gson.toJson(surveyItem);
-		String JSON_Body = "\"body\": " + JsonSurvey;
+		MultipartEntity postParameters = new MultipartEntity();
 
-		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+		try {
+			// URLEncoder.encode 는 get 방식일떄만!
+			postParameters.addPart(
+					"device_id",
+					new StringBody(header.getDeviceID(), Charset
+							.forName("UTF-8")));
+			postParameters.addPart(
+					"access_token",
+					new StringBody(header.getAccess_token(), Charset
+							.forName("UTF-8")));
+			postParameters.addPart("idx", new StringBody(surveyItem.getIdx()
+					+ "", Charset.forName("UTF-8")));
+			postParameters.addPart("surveyIdx", new StringBody(surveyItem.getSurveyIdx()
+					+ "", Charset.forName("UTF-8")));
+			postParameters.addPart(
+					"question",
+					new StringBody(surveyItem.getQuestion(), Charset
+							.forName("UTF-8")));
 
-		return RequestJSON(url, rstJSON);
+			if(surveyItem.getImageUrl() != null) {
+				Log.i("IPC_Request", "Image URI : " + surveyItem.getImageUrl());
+				FileBody bin = new FileBody(new File(surveyItem.getImageUrl()));
+				postParameters.addPart("img", bin);
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return RequestPostMultipart(url, postParameters);		
+//		String rstJSON = "";
+//		String JSON_Header = header.getHeaderJSON();
+//		String JsonSurvey = gson.toJson(surveyItem);
+//		String JSON_Body = "\"body\": " + JsonSurvey;
+//
+//		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
+//
+//		return RequestJSON(url, rstJSON);
 	}
 
-	public JsonElement requestSurveyItemDelete(IPCHeader header, int surveyId, int surveyItemId) {
+	public JsonElement requestSurveyItemDelete(IPCHeader header, int surveyId,
+			int surveyItemId) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
 		String url = path.append("survey/item/delete.php").toString();
 		Log.i("IPC_Request", url);
 
 		String rstJSON = "";
 		String JSON_Header = header.getHeaderJSON();
-		String JSON_Body = "\"body\":{ " 
-				+ "\"surveyIdx\":" + surveyId + "," 
-				+ "\"idx\":" + surveyItemId
-				+ "}";
+		String JSON_Body = "\"body\":{ " + "\"surveyIdx\":" + surveyId + ","
+				+ "\"idx\":" + surveyItemId + "}";
 
 		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 
 		return RequestJSON(url, rstJSON);
 	}
-	
-	public JsonElement requestFillOutPost(IPCHeader header, int surveyIdx, int surveyItemIdx, int answer) {
+
+	public JsonElement requestFillOutPost(IPCHeader header, int surveyIdx,
+			int surveyItemIdx, int answer) {
 		StringBuffer path = new StringBuffer(ServerBaseUrl);
 		String url = path.append("survey/fill/post.php").toString();
 		Log.i("IPC_Request", url);
 
 		String rstJSON = "";
 		String JSON_Header = header.getHeaderJSON();
-		String JSON_Body = "\"body\":{ "
-				+ "\"surveyIdx\":" + surveyIdx + ","
-				+ "\"itemIdx\":" + surveyItemIdx + ","
-				+ "\"answer\":" + answer + "}";
+		String JSON_Body = "\"body\":{ " + "\"surveyIdx\":" + surveyIdx + ","
+				+ "\"itemIdx\":" + surveyItemIdx + "," + "\"answer\":" + answer
+				+ "}";
 
 		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 
@@ -339,5 +408,5 @@ public class IPC {
 		rstJSON = "{" + JSON_Header + "," + JSON_Body + "}";
 
 		return RequestJSON(url, rstJSON);
-	}	
+	}
 }

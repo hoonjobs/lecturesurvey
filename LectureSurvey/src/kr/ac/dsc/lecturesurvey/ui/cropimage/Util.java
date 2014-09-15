@@ -1,4 +1,4 @@
-package kr.hoonjobs.hotple.ui.cropimage;
+package kr.ac.dsc.lecturesurvey.ui.cropimage;
 /*
  * Copyright (C) 2009 The Android Open Source Project
  *

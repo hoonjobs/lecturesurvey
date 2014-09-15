@@ -4,37 +4,51 @@ import java.io.Serializable;
 
 public class SurveyItem implements Serializable {
 
-	private int idx;		//설문 번호
-	private int surveyIdx;		//설문지 번호
-	private String question;	//설문 질문
-	private int answer;		//설문응답 번호 / 1:1번(그렇다), 2:2반(보통이다), 3:3번(아니다)
-	private String imageUrl;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1374372982641320147L;
 
-	private int answerCnt1;	//1번 응답  수
-	private int answerCnt2; //2번 응답  수
-	private int answerCnt3; //3번 응답  수
-	
-	//학생
+	private int idx; // 설문 번호
+	private int surveyIdx; // 설문지 번호
+	private String question; // 설문 질문
+	private int answer; // 설문응답 번호 / 1:1번(그렇다), 2:2반(보통이다), 3:3번(아니다)
+	private String imageUrl = "";
+
+	private int answerCnt1; // 1번 응답 수
+	private int answerCnt2; // 2번 응답 수
+	private int answerCnt3; // 3번 응답 수
+
+	// 학생
 	public SurveyItem(int idx, int surveyIdx, String question) {
 		super();
 		this.idx = idx;
 		this.surveyIdx = surveyIdx;
 		this.question = question;
+		this.imageUrl = "";
 	}
 
-	//학생
+	// 학생
 	public SurveyItem(int idx, int surveyIdx, String question, int answer) {
 		super();
 		this.idx = idx;
 		this.surveyIdx = surveyIdx;
 		this.question = question;
 		this.answer = answer;
+		this.imageUrl = "";
 	}
 
-	//교수
+	// 교수
+	public SurveyItem(int idx, int surveyIdx, String question, String imageUrl) {
+		super();
+		this.idx = idx;
+		this.surveyIdx = surveyIdx;
+		this.question = question;
+		this.imageUrl = imageUrl;
+	}
+
 	public SurveyItem(int idx, int surveyIdx, String question, int answer,
-			String imageUrl,
-			int answerCnt1, int answerCnt2, int answerCnt3) {
+			String imageUrl, int answerCnt1, int answerCnt2, int answerCnt3) {
 		super();
 		this.idx = idx;
 		this.surveyIdx = surveyIdx;
@@ -109,5 +123,5 @@ public class SurveyItem implements Serializable {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+
 }

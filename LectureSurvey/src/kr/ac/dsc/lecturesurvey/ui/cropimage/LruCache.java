@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kr.hoonjobs.hotple.ui.cropimage;
+package kr.ac.dsc.lecturesurvey.ui.cropimage;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;

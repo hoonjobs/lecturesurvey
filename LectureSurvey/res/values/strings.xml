@@ -10,6 +10,7 @@
     <string name="fill_out_answer3">아니다</string>
 
     <string name="choice">선택</string>
+    <string name="photo_attach">사진 첨부</string>
     <string name="lecture_name">강의명</string>
     <string name="lecture_dept">강의 학과</string>
     <string name="lecture_date">강의일</string>

@@ -1,4 +1,4 @@
-package kr.hoonjobs.hotple.ui.cropimage;
+package kr.ac.dsc.lecturesurvey.ui.cropimage;
 
 import java.io.File;
 

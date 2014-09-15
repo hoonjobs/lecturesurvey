@@ -23,7 +23,7 @@ limitations under the License.
             android:layout_height="fill_parent"
             android:orientation="horizontal">
 
-        <view class="kr.hoonjobs.hotple.ui.cropimage.CropImageView" android:id="@+id/image"
+        <view class="kr.ac.dsc.lecturesurvey.ui.cropimage.CropImageView" android:id="@+id/image"
                 android:background="#55000000"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -42,28 +42,28 @@ limitations under the License.
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="Save"
+                    android:text="저장"
             />
             <Button
                     android:id="@+id/discard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/save"
-                    android:text="Discard"
+                    android:text="취소"
             />
             <Button
                     android:id="@+id/rotateLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/discard"
-                    android:text="Rotate Left"
+                    android:text="왼쪽으로 회전"
             />
             <Button
                     android:id="@+id/rotateRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/rotateLeft"
-                    android:text="Rotate Right"
+                    android:text="오른쪽으로 회전"
             />
         </RelativeLayout>
     </RelativeLayout>
