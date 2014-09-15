@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<previews>
+
+    <preview
+        name="xxx"
+        activity="kr.ac.dsc.lecturesurvey.SignUpActivity"
+        config="layout-ldltr-sw360dp-w360dp-h640dp-normal-notlong-port-notnight-xxhdpi-finger-keyssoft-nokeys-navhidden-nonav-1920x1080-v19"
+        device="Nexus 5"
+        devicestate="Portrait"
+        target="Android 4.4.2"
+        theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+    </preview>
+
+</previews>

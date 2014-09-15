@@ -1,17 +1,30 @@
 package kr.ac.dsc.lecturesurvey;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import kr.ac.dsc.lecturesurvey.ipc.IPC;
+import kr.ac.dsc.lecturesurvey.ipc.VolleyClient;
 import kr.ac.dsc.lecturesurvey.model.Survey;
 import kr.ac.dsc.lecturesurvey.model.SurveyItem;
+import kr.ac.dsc.lecturesurvey.ui.IconContextMenu;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -21,6 +34,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.JsonElement;
 
 public class RegSurveyItemActivity extends Activity {
@@ -38,6 +52,23 @@ public class RegSurveyItemActivity extends Activity {
 	
 	Context mContext;
 	
+	ImageView mImageView;
+	
+	/* ContextMenu*/
+	private final int CONTEXT_MENU_ID = 1;
+	private IconContextMenu iconContextMenu = null;
+	
+	private final int MENU_ITEM_1_ACTION = 1;
+	private final int MENU_ITEM_2_ACTION = 2;
+	private final int MENU_ITEM_3_ACTION = 3;
+	private final int MENU_ITEM_4_ACTION = 4;	
+	private static final int PICK_FROM_CAMERA = 0;
+	private static final int PICK_FROM_ALBUM = 1;
+	private static final int CROP_FROM_CAMERA = 2;
+	private Uri mAttachedUri = null;
+	private Uri mImageCaptureUri = null;
+	private String mImageCapturePath = null;	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -46,6 +77,8 @@ public class RegSurveyItemActivity extends Activity {
 		mContext = this;
 		
 		setContentView(R.layout.reg_survey_item_activity);
+		
+		//mImageView = (ImageView) findViewById(R.id.reg_survey_imageView);
 		
 		// get Survey Data ////////////
 		Intent intent = getIntent();
@@ -91,7 +124,47 @@ public class RegSurveyItemActivity extends Activity {
 		
 		etQuestion = (EditText) findViewById(R.id.reg_survey_item_etQuestion);
 		
-		if(mSurveyItem != null) etQuestion.setText(mSurveyItem.getQuestion());
+		if(mSurveyItem != null) {
+			etQuestion.setText(mSurveyItem.getQuestion());
+			
+			if(mSurveyItem.getImageUrl().length() > 3) {
+				VolleyClient.getImageLoader().get(mSurveyItem.getImageUrl(), 
+                        ImageLoader.getImageListener(mImageView, 
+                                                      R.drawable.ic_star, 
+                                                      R.drawable.ic_star));				
+			}			
+		}
+		
+    	/* ContextMenu*/
+        Resources res = getResources();		
+        iconContextMenu = new IconContextMenu(this, CONTEXT_MENU_ID);
+        iconContextMenu.addItem(res, "카메라로 촬영", R.drawable.ic_camera, MENU_ITEM_1_ACTION);
+        iconContextMenu.addItem(res, "사진첩에서 불러오기", R.drawable.ic_gallery, MENU_ITEM_2_ACTION);
+        
+        //set onclick listener for context menu
+        iconContextMenu.setOnClickListener(new IconContextMenu.IconContextMenuOnClickListener() {
+			@Override
+			public void onClick(int menuId) {
+				switch(menuId) {
+				case MENU_ITEM_1_ACTION:
+					doTakePhotoAction();
+					break;
+				case MENU_ITEM_2_ACTION:
+					doTakeAlbumAction();
+					//Toast.makeText(getApplicationContext(), "You've clicked on menu item 2", 1000).show();
+					break;
+				case MENU_ITEM_3_ACTION:
+					//Toast.makeText(getApplicationContext(), "You've clicked on menu item 3", 1000).show();
+					break;
+				case MENU_ITEM_4_ACTION:
+					//Toast.makeText(getApplicationContext(), "You've clicked on menu item 4", 1000).show();
+					break;
+				}
+			}
+		});
+        
+    	/*// ContextMenu*/
+		
 	}
 	
 	public void doPostSurveyItem()
@@ -130,7 +203,39 @@ public class RegSurveyItemActivity extends Activity {
 		
 		new GetDataTask().execute(surveyItem);
 	}
-		
+
+	//카메라촬영
+	private void doTakePhotoAction() {
+
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+		if(mImageCaptureUri == null) {
+			mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+					"lecturesurvey_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+		}
+
+		intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+
+		try {
+			intent.putExtra("return-data", false);
+			startActivityForResult(intent, PICK_FROM_CAMERA);
+		} catch (ActivityNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void doTakeAlbumAction() {
+		// 사진첩에서 불러오기
+		// Intent intent = new Intent(Intent.ACTION_PICK);
+		// intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+		startActivityForResult(intent, PICK_FROM_ALBUM);
+		overridePendingTransition(R.anim.left_in, R.anim.splashfadeout);
+
+	}
+	
 	private class GetDataTask extends AsyncTask<SurveyItem, Void, Boolean> {
 
 		@Override
@@ -241,5 +346,75 @@ public class RegSurveyItemActivity extends Activity {
 		super.finish();
 		overridePendingTransition( R.anim.splashfadein, R.anim.right_out);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if(resultCode != RESULT_OK)
+		{
+			return;
+		}
+
+		switch (requestCode) {
+		case PICK_FROM_ALBUM: {
+			if (null != data) {
+				Uri uri = null;
+				if (data != null) {
+					uri = data.getData();
+
+					Log.d(getClass().getSimpleName(), "PICK_FROM_ALBUM " + uri);
+
+					mAttachedUri = uri;
+					showImage(uri);
+				}
+				break;
+			}
+		}
+		}
+	}
+
+	private void showImage(Uri uri) {
+		AsyncTask<Uri, Void, Bitmap> imageLoadAsyncTask = new AsyncTask<Uri, Void, Bitmap>() {
+			@Override
+			protected Bitmap doInBackground(Uri... uris) {
+				return getBitmapFromUri(uris[0]);
+			}
+
+			@Override
+			protected void onPostExecute(Bitmap bitmap) {
+				//mImageView.setImageBitmap(bitmap);
+			}
+		};
 		
+		imageLoadAsyncTask.execute(uri);
+	}
+	
+	/* Uri를 Bitmap으로 쓸 수 있게해준다. */
+	private Bitmap getBitmapFromUri(Uri uri) {
+		ParcelFileDescriptor parcelFileDescriptor = null;
+		try {
+			parcelFileDescriptor = this.getContentResolver()
+					.openFileDescriptor(uri, "r");
+			FileDescriptor fileDescriptor = parcelFileDescriptor
+					.getFileDescriptor();
+			Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+			parcelFileDescriptor.close();
+			return image;
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), "Failed to load image.", e);
+			return null;
+		} finally {
+			try {
+				if (parcelFileDescriptor != null) {
+					parcelFileDescriptor.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(getClass().getSimpleName(),
+						"Error closing ParcelFile Descriptor");
+			}
+		}
+	}
 }

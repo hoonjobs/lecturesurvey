@@ -8,6 +8,7 @@ public class SurveyItem implements Serializable {
 	private int surveyIdx;		//설문지 번호
 	private String question;	//설문 질문
 	private int answer;		//설문응답 번호 / 1:1번(그렇다), 2:2반(보통이다), 3:3번(아니다)
+	private String imageUrl;
 
 	private int answerCnt1;	//1번 응답  수
 	private int answerCnt2; //2번 응답  수
@@ -32,12 +33,14 @@ public class SurveyItem implements Serializable {
 
 	//교수
 	public SurveyItem(int idx, int surveyIdx, String question, int answer,
+			String imageUrl,
 			int answerCnt1, int answerCnt2, int answerCnt3) {
 		super();
 		this.idx = idx;
 		this.surveyIdx = surveyIdx;
 		this.question = question;
 		this.answer = answer;
+		this.imageUrl = imageUrl;
 		this.answerCnt1 = answerCnt1;
 		this.answerCnt2 = answerCnt2;
 		this.answerCnt3 = answerCnt3;
@@ -98,5 +101,13 @@ public class SurveyItem implements Serializable {
 	public void setAnswerCnt3(int answerCnt3) {
 		this.answerCnt3 = answerCnt3;
 	}
-		
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	
 }
