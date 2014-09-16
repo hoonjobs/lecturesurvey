@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,15 +24,17 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import kr.ac.dsc.lecturesurvey.ipc.IPC;
+import kr.ac.dsc.lecturesurvey.ipc.VolleyClient;
 import kr.ac.dsc.lecturesurvey.model.*;
 
 public class FillOutSurveyActivity extends Activity {
 
 	Context mContext;
-	
+
 	Survey mSurvey;
 	Queue<SurveyItem> mSurveyItems;
 	SurveyItem mCurrentSurveyItem;
@@ -40,6 +43,9 @@ public class FillOutSurveyActivity extends Activity {
 	Animation animFadeIn, animBtnEffect;
 	TextView tvQuestion;
 	Button btnYes, btnNeither, btnNo;
+	ImageView mImageView;
+
+	int mCurrentNum = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class FillOutSurveyActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		mContext = this;
-		
+
 		animFadeIn = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		animBtnEffect = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
 
@@ -59,6 +65,8 @@ public class FillOutSurveyActivity extends Activity {
 		btnYes = (Button) findViewById(R.id.fill_out_survey_btnYes);
 		btnNeither = (Button) findViewById(R.id.fill_out_survey_btnNeither);
 		btnNo = (Button) findViewById(R.id.fill_out_survey_btnNo);
+
+		mImageView = (ImageView) findViewById(R.id.fill_out_survey_imageView1);
 
 		animBtnEffect.setAnimationListener(new AnimationListener() {
 
@@ -85,76 +93,109 @@ public class FillOutSurveyActivity extends Activity {
 				btnNo.setClickable(true);
 			}
 		});
-		
-		//  get Survey Data ////////////
+
+		// get Survey Data ////////////
 		Intent intent = getIntent();
-		mSurvey = ((Survey)intent.getSerializableExtra("survey")) ;
-		if(mSurvey == null) finish();
-		
-		//Test Survey Item Data
-//		mSurveyItems = new LinkedList<SurveyItem>();
-//		mSurveyItems.add(new SurveyItem(1, 1, "이것은 설문입니다.1 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(2, 1, "이것은 설문입니다.2 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(3, 1, "이것은 설문입니다.3 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(4, 1, "이것은 설문입니다.4 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(5, 1, "이것은 설문입니다.5 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(6, 1, "이것은 설문입니다.6 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(7, 1, "이것은 설문입니다.7 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(8, 1, "이것은 설문입니다.8 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(9, 1, "이것은 설문입니다.9 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		mSurveyItems.add(new SurveyItem(10, 1, "이것은 설문입니다.10 답변을 부탁 드립니다. \r\n줄바꿈."));
-//		
-//		setQuestion();
-//		////
-		
+		mSurvey = ((Survey) intent.getSerializableExtra("survey"));
+		if (mSurvey == null)
+			finish();
+
+		// Test Survey Item Data
+		// mSurveyItems = new LinkedList<SurveyItem>();
+		// mSurveyItems.add(new SurveyItem(1, 1,
+		// "이것은 설문입니다.1 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(2, 1,
+		// "이것은 설문입니다.2 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(3, 1,
+		// "이것은 설문입니다.3 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(4, 1,
+		// "이것은 설문입니다.4 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(5, 1,
+		// "이것은 설문입니다.5 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(6, 1,
+		// "이것은 설문입니다.6 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(7, 1,
+		// "이것은 설문입니다.7 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(8, 1,
+		// "이것은 설문입니다.8 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(9, 1,
+		// "이것은 설문입니다.9 답변을 부탁 드립니다. \r\n줄바꿈."));
+		// mSurveyItems.add(new SurveyItem(10, 1,
+		// "이것은 설문입니다.10 답변을 부탁 드립니다. \r\n줄바꿈."));
+		//
+		// setQuestion();
+		// ////
+
+		mCurrentNum = 0;
+
 		btnYes.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				new PostDataTask().execute(mSurvey.getIdx(), mCurrentSurveyItem.getIdx(), 1);
-				//setQuestion();
+				new PostDataTask().execute(mSurvey.getIdx(),
+						mCurrentSurveyItem.getIdx(), 1);
+				// setQuestion();
 			}
 		});
-		
+
 		btnNeither.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				new PostDataTask().execute(mSurvey.getIdx(), mCurrentSurveyItem.getIdx(), 2);
-				//setQuestion();
+				new PostDataTask().execute(mSurvey.getIdx(),
+						mCurrentSurveyItem.getIdx(), 2);
+				// setQuestion();
 			}
 		});
-		
+
 		btnNo.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				new PostDataTask().execute(mSurvey.getIdx(), mCurrentSurveyItem.getIdx(), 3);
-				//setQuestion();
+				new PostDataTask().execute(mSurvey.getIdx(),
+						mCurrentSurveyItem.getIdx(), 3);
+				// setQuestion();
 			}
 		});
-		
-		//설문항목 요청
+
+		// 설문항목 요청
 		new GetDataTask().execute();
-		
+
 	}
 
 	protected void setQuestion() {
 
-		//Queue에서 다음 데이터를 추출한다. 다음 데이터가 없다면 null 이 대입된다.
+		// Queue에서 다음 데이터를 추출한다. 다음 데이터가 없다면 null 이 대입된다.
 		mCurrentSurveyItem = mSurveyItems.poll();
 
 		if (mCurrentSurveyItem != null) {
+
+			mCurrentNum++;
 
 			runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					tvQuestion.setText(mCurrentSurveyItem.getQuestion());
+					mImageView.setVisibility(View.GONE);
+
+					tvQuestion.setText(mCurrentNum
+							+ ". "
+							+ mCurrentSurveyItem.getQuestion());
+
+					if (mCurrentSurveyItem.getImageUrl() != null) {
+						if (mCurrentSurveyItem.getImageUrl().length() > 3) {
+							mImageView.setVisibility(View.VISIBLE);
+							VolleyClient.getImageLoader().get(
+									mCurrentSurveyItem.getImageUrl(),
+									ImageLoader.getImageListener(mImageView,
+											R.anim.indicator_frame,
+											R.drawable.ic_star));
+						}
+					}
 
 					// start animation
 					tvQuestion.startAnimation(animFadeIn);
@@ -167,39 +208,44 @@ public class FillOutSurveyActivity extends Activity {
 				}
 			});
 		} else {
-			//다음 질문이 없다. 여기에서 설문을 종료한다.
-			//	option : 서버에 설문 종료 알림. 
-			LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info, R.string.alert_msg_survey_fillout_endded, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					finish();
-				}
-			});
-			
+			// 다음 질문이 없다. 여기에서 설문을 종료한다.
+			// option : 서버에 설문 종료 알림.
+			LSApplication.ErrorPopup(mContext, R.string.popup_alert_title_info,
+					R.string.alert_msg_survey_fillout_endded,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							finish();
+						}
+					});
+
 		}
 	}
 
-	
-	/////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////
 	private class GetDataTask extends AsyncTask<Void, Void, Queue<SurveyItem>> {
 
 		@Override
 		protected Queue<SurveyItem> doInBackground(Void... params) {
-			JsonElement json = IPC.getInstance().requestSurveyItemList(LSApplication.gRequestHeader, mSurvey.getIdx()); 
-			if(json == null) return null;
-			
-			if (json.isJsonObject()) {
-			    JsonObject jsonObject = json.getAsJsonObject();
-			    JsonObject body = jsonObject.getAsJsonObject("body");
-			   
-			    JsonArray Items = body.getAsJsonArray("items");
+			JsonElement json = IPC.getInstance().requestSurveyItemList(
+					LSApplication.gRequestHeader, mSurvey.getIdx());
+			if (json == null)
+				return null;
 
-			    Queue<SurveyItem> arrNewSurveys;
-			    arrNewSurveys = IPC.getInstance().getGson().fromJson(Items, new TypeToken<Queue<SurveyItem>>(){}.getType());
-			    return arrNewSurveys;
-			    
+			if (json.isJsonObject()) {
+				JsonObject jsonObject = json.getAsJsonObject();
+				JsonObject body = jsonObject.getAsJsonObject("body");
+
+				JsonArray Items = body.getAsJsonArray("items");
+
+				Queue<SurveyItem> arrNewSurveys;
+				arrNewSurveys = IPC.getInstance().getGson()
+						.fromJson(Items, new TypeToken<Queue<SurveyItem>>() {
+						}.getType());
+				return arrNewSurveys;
+
 			}
 			return null;
 		}
@@ -211,31 +257,34 @@ public class FillOutSurveyActivity extends Activity {
 			super.onPostExecute(arrNewSurveys);
 		}
 	}
-	
-	/////////////////////////////////////////////////////////////////////////////
+
+	// ///////////////////////////////////////////////////////////////////////////
 	private class PostDataTask extends AsyncTask<Integer, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Integer... params) {
-			JsonElement json = IPC.getInstance().requestFillOutPost(LSApplication.gRequestHeader, params[0], params[1], params[2] );
-			if(json == null) return false;
-			
+			JsonElement json = IPC.getInstance().requestFillOutPost(
+					LSApplication.gRequestHeader, params[0], params[1],
+					params[2]);
+			if (json == null)
+				return false;
+
 			if (json.isJsonObject()) {
 				return true;
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				setQuestion();
 			}
 			super.onPostExecute(result);
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
@@ -259,14 +308,17 @@ public class FillOutSurveyActivity extends Activity {
 	}
 
 	public void exitPopup() {
-		new AlertDialog.Builder(this).setTitle(R.string.survey_end)
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.survey_end)
 				.setMessage(R.string.alert_msg_survey_end_confirm)
-				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				}).setNegativeButton(R.string.no, null).show();
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								finish();
+							}
+						}).setNegativeButton(R.string.no, null).show();
 	}
 }
